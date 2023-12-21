@@ -1,0 +1,24 @@
+name: "Yay internet!"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "My Resume"
+      href: Resume.html
+    - text: "DS Project"
+      href: https://doloreshqq.github.io/p8105_final.github.io/
+    - text: "Survival Project"
+      href: profLK.html
+    - text: "XAI Project"
+      href: xai.html
+    - text: "BM Project"
+      href: bm.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<qh2284@cumc.columbia.edu>
+    - icon: fa-github fa-lg
+      href: http://github.com/Doloreshqq/
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true

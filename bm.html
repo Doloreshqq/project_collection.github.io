@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>BM project</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Resume.html">My Resume</a>
+</li>
+<li>
+  <a href="https://doloreshqq.github.io/p8105_final.github.io/">DS Project</a>
+</li>
+<li>
+  <a href="profLK.html">Survival Project</a>
+</li>
+<li>
+  <a href="xai.html">XAI Project</a>
+</li>
+<li>
+  <a href="bm.html">BM Project</a>
+</li>
+<li>
+  <a href="mailto:&lt;qh2284@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/Doloreshqq/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BM project</h1>
+
+</div>
+
+
+<div id="data-import" class="section level2">
+<h2>Data Import</h2>
+<pre class="r"><code>data_df = read_csv(&quot;dataset/Project_2_data.csv&quot;)|&gt;
+  janitor::clean_names()|&gt;
+  subset(select = -c(survival_months))|&gt;
+  mutate(grade = ifelse(grade == &quot;anaplastic; Grade IV&quot;, 4, grade))|&gt;
+  mutate(
+    t_stage = factor(t_stage),
+    race = factor(race),
+    marital_status = factor(marital_status),
+    n_stage = factor(n_stage),
+    x6th_stage = factor(x6th_stage),
+    differentiate = factor(differentiate),
+    a_stage = factor(a_stage), 
+    estrogen_status = factor(estrogen_status),
+    progesterone_status = factor(progesterone_status), 
+    status = factor(status),
+    grade = factor(grade)
+  )</code></pre>
+<pre><code>## Rows: 4024 Columns: 16
+## ── Column specification ───────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (11): Race, Marital Status, T Stage, N Stage, 6th Stage, differentiate, ...
+## dbl  (5): Age, Tumor Size, Regional Node Examined, Reginol Node Positive, Su...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>colnames(data_df)</code></pre>
+<pre><code>##  [1] &quot;age&quot;                    &quot;race&quot;                   &quot;marital_status&quot;        
+##  [4] &quot;t_stage&quot;                &quot;n_stage&quot;                &quot;x6th_stage&quot;            
+##  [7] &quot;differentiate&quot;          &quot;grade&quot;                  &quot;a_stage&quot;               
+## [10] &quot;tumor_size&quot;             &quot;estrogen_status&quot;        &quot;progesterone_status&quot;   
+## [13] &quot;regional_node_examined&quot; &quot;reginol_node_positive&quot;  &quot;status&quot;</code></pre>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<pre class="r"><code>age_df = data_df|&gt;
+  group_by(age) %&gt;%
+  summarise(n=n())
+
+age_df %&gt;%
+  ggplot(aes(x = age, y = n)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;age&quot;, y = &quot;Count&quot;, 
+       title = &quot;Distribution by age&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>race_df = data_df|&gt;
+  group_by(race) %&gt;%
+  summarise(n=n())
+
+race_df %&gt;%
+  ggplot(aes(x = race, y = n, fill = race)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;race&quot;, y = &quot;Count&quot;, fill = &quot;race&quot;, 
+       title = &quot;Distribution by race&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>marital_df = data_df|&gt;
+  group_by(marital_status) %&gt;%
+  summarise(n=n())
+
+marital_df %&gt;%
+  ggplot(aes(x = marital_status, y = n, fill = marital_status)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;marital status&quot;, y = &quot;Count&quot;, fill = &quot;marital status&quot;, 
+       title = &quot;Distribution by marital status&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>t_df = data_df|&gt;
+  group_by(t_stage) %&gt;%
+  summarise(n=n())
+
+t_df %&gt;%
+  ggplot(aes(x = t_stage, y = n, fill = t_stage)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;t_stage&quot;, y = &quot;Count&quot;, fill = &quot;t_stage&quot;, 
+       title = &quot;Distribution by t_stage&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>n_df = data_df|&gt;
+  group_by(n_stage) %&gt;%
+  summarise(n=n())
+
+n_df %&gt;%
+  ggplot(aes(x = n_stage, y = n, fill = n_stage)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;n_stage&quot;, y = &quot;Count&quot;, fill = &quot;n_stage&quot;, 
+       title = &quot;Distribution by n_stage&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>x6_df = data_df|&gt;
+  group_by(x6th_stage) %&gt;%
+  summarise(n=n())
+
+x6_df %&gt;%
+  ggplot(aes(x = x6th_stage, y = n, fill = x6th_stage)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;x6th_stage&quot;, y = &quot;Count&quot;, fill = &quot;x6th_stage&quot;, 
+       title = &quot;Distribution by x6th_stage&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>a_df = data_df|&gt;
+  group_by(a_stage) %&gt;%
+  summarise(n=n())
+
+a_df %&gt;%
+  ggplot(aes(x = a_stage, y = n, fill = a_stage)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;a_stage&quot;, y = &quot;Count&quot;, fill = &quot;a_stage&quot;, 
+       title = &quot;Distribution by a_stage&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>grade_df = data_df|&gt;
+  group_by(grade) %&gt;%
+  summarise(n=n())
+
+grade_df %&gt;%
+  ggplot(aes(x = grade, y = n, fill = grade)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;grade&quot;, y = &quot;Count&quot;, fill = &quot;grade&quot;, 
+       title = &quot;Distribution by grade&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>diff_df = data_df|&gt;
+  group_by(differentiate) %&gt;%
+  summarise(n=n())
+
+diff_df %&gt;%
+  ggplot(aes(x = differentiate, y = n, fill = differentiate)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;differentiate&quot;, y = &quot;Count&quot;, fill = &quot;differentiate&quot;, 
+       title = &quot;Distribution by differentiate&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>size_df = data_df|&gt;
+  group_by(tumor_size) %&gt;%
+  summarise(n=n())
+
+size_df %&gt;%
+  ggplot(aes(x = tumor_size, y = n)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;tumor size&quot;, y = &quot;Count&quot;, 
+       title = &quot;Distribution by tumor size&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>estrogen_df = data_df|&gt;
+  group_by(estrogen_status) %&gt;%
+  summarise(n=n())
+
+estrogen_df %&gt;%
+  ggplot(aes(x = estrogen_status, y = n, fill = estrogen_status)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;estrogen status&quot;, y = &quot;Count&quot;, fill = &quot;estrogen status&quot;, 
+       title = &quot;Distribution by estrogen status&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code>pro_df = data_df|&gt;
+  group_by(progesterone_status) %&gt;%
+  summarise(n=n())
+
+pro_df %&gt;%
+  ggplot(aes(x = progesterone_status, y = n, fill = progesterone_status)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;progesterone status&quot;, y = &quot;Count&quot;, fill = &quot;progesterone status&quot;, 
+       title = &quot;Distribution by progesterone status&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>nodeExam_df = data_df|&gt;
+  group_by(regional_node_examined) %&gt;%
+  summarise(n=n())
+
+nodeExam_df %&gt;%
+  ggplot(aes(x = regional_node_examined, y = n)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;regional node examined&quot;, y = &quot;Count&quot;, 
+       title = &quot;Distribution by regional node examined&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r"><code>nodePos_df = data_df|&gt;
+  group_by(reginol_node_positive) %&gt;%
+  summarise(n=n())
+
+nodePos_df %&gt;%
+  ggplot(aes(x = reginol_node_positive, y = n)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  theme_minimal() +
+  labs(x = &quot;regional node positive&quot;, y = &quot;Count&quot;, 
+       title = &quot;Distribution by regional node positive&quot;)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="preparation-before-modeling" class="section level2">
+<h2>Preparation before Modeling</h2>
+<div id="check-colinear" class="section level3">
+<h3>check colinear</h3>
+<pre class="r"><code>logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + x6th_stage + differentiate + grade + a_stage + tumor_size + estrogen_status + progesterone_status + regional_node_examined + reginol_node_positive, data = data_df, family = binomial())</code></pre>
+<pre class="r"><code>summary(logistic_model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = status ~ age + race + marital_status + t_stage + 
+##     n_stage + x6th_stage + differentiate + grade + a_stage + 
+##     tumor_size + estrogen_status + progesterone_status + regional_node_examined + 
+##     reginol_node_positive, family = binomial(), data = data_df)
+## 
+## Coefficients: (4 not defined because of singularities)
+##                                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                        -1.7760652  0.4874359  -3.644 0.000269 ***
+## age                                 0.0241699  0.0056199   4.301 1.70e-05 ***
+## raceOther                          -0.9235406  0.2486035  -3.715 0.000203 ***
+## raceWhite                          -0.5097774  0.1618144  -3.150 0.001631 ** 
+## marital_statusMarried              -0.2102748  0.1417668  -1.483 0.138010    
+## marital_statusSeparated             0.6717802  0.3874652   1.734 0.082957 .  
+## marital_statusSingle               -0.0677682  0.1750670  -0.387 0.698683    
+## marital_statusWidowed               0.0234528  0.2210320   0.106 0.915498    
+## t_stageT2                           0.2821932  0.1953845   1.444 0.148656    
+## t_stageT3                           0.5359069  0.3137751   1.708 0.087649 .  
+## t_stageT4                           0.9542320  0.4500716   2.120 0.033991 *  
+## n_stageN2                           0.6208066  0.2391834   2.596 0.009445 ** 
+## n_stageN3                           0.6910134  0.3007413   2.298 0.021579 *  
+## x6th_stageIIB                       0.2143223  0.2318280   0.924 0.355232    
+## x6th_stageIIIA                     -0.0871350  0.2950089  -0.295 0.767716    
+## x6th_stageIIIB                      0.0887019  0.5289101   0.168 0.866814    
+## x6th_stageIIIC                             NA         NA      NA       NA    
+## differentiatePoorly differentiated  0.3884281  0.1049279   3.702 0.000214 ***
+## differentiateUndifferentiated       1.3615636  0.5324917   2.557 0.010559 *  
+## differentiateWell differentiated   -0.5367572  0.1840814  -2.916 0.003547 ** 
+## grade2                                     NA         NA      NA       NA    
+## grade3                                     NA         NA      NA       NA    
+## grade4                                     NA         NA      NA       NA    
+## a_stageRegional                    -0.0401504  0.2662370  -0.151 0.880128    
+## tumor_size                          0.0002492  0.0039726   0.063 0.949990    
+## estrogen_statusPositive            -0.7418514  0.1778875  -4.170 3.04e-05 ***
+## progesterone_statusPositive        -0.5860593  0.1276841  -4.590 4.43e-06 ***
+## regional_node_examined             -0.0358800  0.0071869  -4.992 5.96e-07 ***
+## reginol_node_positive               0.0790803  0.0153636   5.147 2.64e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 3444.7  on 4023  degrees of freedom
+## Residual deviance: 2952.0  on 3999  degrees of freedom
+## AIC: 3002
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>We noticed that there are Na in our coefficient, which might means
+existed collinearlity.</p>
+<pre class="r"><code>df_total_stage = data_df|&gt;
+  mutate(
+    t_stage = as.character(t_stage), 
+    n_stage = as.character(n_stage), 
+    x6th_stage = as.character(x6th_stage), 
+    stage = paste(t_stage, n_stage, x6th_stage, sep = &quot;-&quot;)
+  )
+
+unique(df_total_stage$stage)</code></pre>
+<pre><code>##  [1] &quot;T1-N1-IIA&quot;  &quot;T2-N2-IIIA&quot; &quot;T3-N3-IIIC&quot; &quot;T2-N1-IIB&quot;  &quot;T4-N3-IIIC&quot;
+##  [6] &quot;T3-N1-IIIA&quot; &quot;T1-N2-IIIA&quot; &quot;T2-N3-IIIC&quot; &quot;T1-N3-IIIC&quot; &quot;T3-N2-IIIA&quot;
+## [11] &quot;T4-N1-IIIB&quot; &quot;T4-N2-IIIB&quot;</code></pre>
+<p>We could see that in our dataset, IIIC is collinear with N3, so this
+will be the reason why there is NA for IIIC. Also, base on research the
+x6th_stage was decided by t_stage and n_stage. So it is a redundant
+variable, we should delete this variable. (<a
+href="https://web2.facs.org/cstage0204/breast/Breast_qad.html"
+class="uri">https://web2.facs.org/cstage0204/breast/Breast_qad.html</a>)</p>
+<pre class="r"><code>df_total_grade = data_df|&gt;
+  mutate(
+    differentiate = as.character(differentiate), 
+    grade = as.character(grade),
+    grade_total = paste(differentiate, grade, sep = &quot;-&quot;)
+  )
+
+unique(df_total_grade$grade_total)</code></pre>
+<pre><code>## [1] &quot;Poorly differentiated-3&quot;     &quot;Moderately differentiated-2&quot;
+## [3] &quot;Well differentiated-1&quot;       &quot;Undifferentiated-4&quot;</code></pre>
+<p>Also we noticed that the grade and differentiate is linked, it is
+also a redundant variable.</p>
+<pre class="r"><code>logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + differentiate + a_stage + tumor_size + estrogen_status + progesterone_status + regional_node_examined + reginol_node_positive, data = data_df, family = binomial())</code></pre>
+<pre class="r"><code>vif_result = vif(logistic_model)
+data.frame(vif_result)|&gt;
+  subset(select = -c(GVIF..1..2.Df..))|&gt;
+  print()</code></pre>
+<pre><code>##                            GVIF Df
+## age                    1.108588  1
+## race                   1.063293  2
+## marital_status         1.132295  4
+## t_stage                4.299763  3
+## n_stage                3.942346  2
+## differentiate          1.119662  3
+## a_stage                1.261191  1
+## tumor_size             3.668392  1
+## estrogen_status        1.477342  1
+## progesterone_status    1.428392  1
+## regional_node_examined 1.480852  1
+## reginol_node_positive  4.249613  1</code></pre>
+<p>We could see that all vif are lower than 5, which means low
+collinearity.</p>
+<pre class="r"><code>data_df = data_df|&gt;
+  subset(select = -c(x6th_stage, differentiate))</code></pre>
+</div>
+<div id="check-nonlinear" class="section level3">
+<h3>check nonlinear</h3>
+<p>Since this is logistic regression, we need to check whether the
+predictors and the Logit of response variable have a linear
+relationship.</p>
+<pre class="r"><code>logistic_model = glm(status ~ ., data = data_df, family = binomial())
+data_df$prob = predict(logistic_model, type = &quot;response&quot;)
+
+numeric_df = data_df |&gt;
+  dplyr::select_if(is.numeric) 
+predictors = colnames(numeric_df)
+
+# Bind the logit and tidying the data for plot
+numeric_df = numeric_df |&gt;
+  mutate(logit = log(prob/(1-prob))) </code></pre>
+<pre class="r"><code>ggplot(numeric_df, aes(logit, age))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = &quot;loess&quot;)+
+  labs(x = &quot;logit&quot;, y = &quot;age&quot;, title = &quot;age vs logits&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;age_linear_check.jpg&quot;)</code></pre>
+<pre class="r"><code>ggplot(numeric_df, aes(logit, tumor_size))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = &quot;loess&quot;) +
+  labs(x = &quot;logit&quot;, y = &quot;tumor size&quot;, title = &quot;tumor size vs logits&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;tumor_size_linear_check.jpg&quot;)</code></pre>
+<pre class="r"><code>ggplot(numeric_df, aes(logit, regional_node_examined))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = &quot;loess&quot;)  +
+  labs(x = &quot;logit&quot;, y = &quot;number of regional node examined&quot;, title = &quot;number of regional node examined vs logits&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;reginal_node_exm_linear_check.jpg&quot;)</code></pre>
+<pre class="r"><code>ggplot(numeric_df, aes(logit, reginol_node_positive))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = &quot;loess&quot;) +
+  labs(x = &quot;logit&quot;, y = &quot;number of regional node being positive&quot;, title = &quot;number of regional node beding positive vs logits&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;reginal_node_pos_linear_check.jpg&quot;)</code></pre>
+<p>The regional_node_examined seems not linear with logits of the
+outcome, this is reasonable since this data is determined by examiner.
+This makes us think maybe this should be excluded from our model or we
+should change regional_node_examined and reginol_node_positive to one
+variable that show a ratio of
+reginol_node_positive/regional_node_examined</p>
+<pre class="r"><code>ggplot(numeric_df, aes(logit, reginol_node_positive/regional_node_examined))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = &quot;loess&quot;) +
+  labs(x = &quot;logit&quot;, y = &quot;number of regional node being positive/regional node being examined&quot;, title = &quot;positive ratio vs logits&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;positive_ratio_linear_check.jpg&quot;)</code></pre>
+<p>We could see this ratio is linear with logit of the outcome. So this
+transformation benefit our analysis in both deal with non-linearity and
+also utilize the predictor reginol_node_positive.</p>
+<p>We then use boxTidwell to test the linearlity, three continuous
+variables shows linear relationship with logit or outcome. All P-values
+larger than 0.05, which suggest linear relationship.</p>
+<pre class="r"><code>data_df = data_df|&gt;
+  mutate(positive_ratio = reginol_node_positive/regional_node_examined)|&gt;
+  subset(select = -c(reginol_node_positive, regional_node_examined))</code></pre>
+<pre class="r"><code>boxTidwell(prob ~ age + tumor_size + positive_ratio, ~ race + marital_status + t_stage + n_stage + grade + a_stage + estrogen_status + progesterone_status, data = data_df)</code></pre>
+<pre><code>##                MLE of lambda Score Statistic (t) Pr(&gt;|t|)  
+## age                  1.34389              1.1183  0.26353  
+## tumor_size           1.55212              1.5205  0.12847  
+## positive_ratio       0.86844             -1.8476  0.06473 .
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## iterations =  11 
+## 
+## Score test for null hypothesis that all lambdas = 1:
+## F = 2.3195, df = 3 and 4000, Pr(&gt;F) = 0.0734</code></pre>
+</div>
+<div id="check-outlier" class="section level3">
+<h3>check outlier</h3>
+<pre class="r"><code>hat_matrix = hatvalues(logistic_model)
+
+threshold = 12*3/4024
+
+data_hat_df = data_df|&gt;
+  mutate(hat_values = hat_matrix)|&gt;
+  mutate(potential_outlier = ifelse(hat_values &gt;= threshold, 1, 0))</code></pre>
+<pre class="r"><code>cook_d = cooks.distance(logistic_model)
+
+data_hat_cook_df = data_hat_df|&gt;
+  mutate(cookd = cook_d)|&gt;
+  mutate(influntial = ifelse(cookd &gt;= 0.5, 1, 0))</code></pre>
+<p>We see that there are no extreme outliers, so we just keep them in
+our model.</p>
+</div>
+</div>
+<div id="model-fitting" class="section level2">
+<h2>Model Fitting</h2>
+<p>Now we starts to decide our model. So obviously our baseline model
+will be logistic regression. To ensure the interpretability of the
+coefficient, we need to rescale our data. Tumor size, and age need to be
+rescale.</p>
+<pre class="r"><code>data_df$age = rescale(data_df$age)
+data_df$tumor_size = rescale(data_df$tumor_size)
+data_df = data_df|&gt;
+  subset(select = -c(prob))</code></pre>
+<div id="baseline-model" class="section level3">
+<h3>baseline model</h3>
+<p>Firstly we will separate our dataset to train and test, then we will
+use 5-fold cv to fit our model</p>
+<pre class="r"><code>set.seed(100)
+
+trainIndex = createDataPartition(data_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+train_df = data_df[trainIndex, ]
+test_df = data_df[-trainIndex, ]
+
+train_covariate = train_df|&gt;
+  subset(select = -c(status))
+
+test_covariate = test_df|&gt;
+  subset(select = -c(status))</code></pre>
+<pre class="r"><code>ctrl = trainControl(method = &quot;cv&quot;, number = 5)
+baseline_model = train(status ~ ., data = train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)</code></pre>
+<pre class="r"><code>baseline_result = predict(baseline_model, newdata = test_df)
+baseline_result = baseline_result|&gt;
+  as.data.frame()|&gt;
+  mutate(actual = test_df$status)</code></pre>
+<pre class="r"><code>confusionMatrix(data=pull(baseline_result, baseline_result), reference = pull(baseline_result, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   674  100
+##      Dead      7   23
+##                                           
+##                Accuracy : 0.8669          
+##                  95% CI : (0.8415, 0.8896)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.06244         
+##                                           
+##                   Kappa : 0.256           
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 0.9897          
+##             Specificity : 0.1870          
+##          Pos Pred Value : 0.8708          
+##          Neg Pred Value : 0.7667          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8383          
+##    Detection Prevalence : 0.9627          
+##       Balanced Accuracy : 0.5884          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>summary(baseline_model)</code></pre>
+<pre><code>## 
+## Call:
+## NULL
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                 -1.94915    0.47295  -4.121 3.77e-05 ***
+## age                          0.81027    0.24168   3.353 0.000800 ***
+## raceOther                   -0.68299    0.27215  -2.510 0.012087 *  
+## raceWhite                   -0.33875    0.18073  -1.874 0.060876 .  
+## marital_statusMarried       -0.31971    0.15414  -2.074 0.038062 *  
+## marital_statusSeparated      0.39324    0.44145   0.891 0.373046    
+## marital_statusSingle        -0.17551    0.19171  -0.915 0.359942    
+## marital_statusWidowed       -0.14942    0.24399  -0.612 0.540289    
+## t_stageT2                    0.43096    0.14647   2.942 0.003257 ** 
+## t_stageT3                    0.41743    0.29812   1.400 0.161453    
+## t_stageT4                    0.85171    0.34128   2.496 0.012572 *  
+## n_stageN2                    0.38679    0.13377   2.891 0.003835 ** 
+## n_stageN3                    0.73352    0.17799   4.121 3.77e-05 ***
+## grade2                       0.45498    0.20264   2.245 0.024755 *  
+## grade3                       0.77509    0.21280   3.642 0.000270 ***
+## grade4                       1.38263    0.64271   2.151 0.031455 *  
+## a_stageRegional             -0.08089    0.28492  -0.284 0.776489    
+## tumor_size                   0.23582    0.61058   0.386 0.699331    
+## estrogen_statusPositive     -0.88056    0.20126  -4.375 1.21e-05 ***
+## progesterone_statusPositive -0.48155    0.14475  -3.327 0.000879 ***
+## positive_ratio               1.18978    0.21108   5.637 1.73e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2756.7  on 3219  degrees of freedom
+## Residual deviance: 2395.2  on 3199  degrees of freedom
+## AIC: 2437.2
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div id="feature-selection-with-interaction-term"
+class="section level3">
+<h3>feature selection with interaction term</h3>
+<pre class="r"><code>concat_predictors = function(input_vector) {
+  if (length(input_vector) == 1){
+    return(c())
+  }
+  n = length(input_vector)
+  result = character(0)
+  
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      combination = paste(input_vector[i], input_vector[j], sep = &quot;:&quot;)
+      result = c(result, combination)
+    }
+  }
+  
+  return(result)
+}</code></pre>
+<pre class="r"><code>all_single_predictors = c(&quot;age&quot;, &quot;tumor_size&quot;, &quot;positive_ratio&quot;, &quot;race&quot;, &quot;marital_status&quot;, &quot;t_stage&quot;, &quot;n_stage&quot;, &quot;grade&quot;, &quot;a_stage&quot;, &quot;estrogen_status&quot;, &quot;progesterone_status&quot;)
+available_single_predictors = c(&quot;age&quot;, &quot;tumor_size&quot;, &quot;positive_ratio&quot;, &quot;race&quot;, &quot;marital_status&quot;, &quot;t_stage&quot;, &quot;n_stage&quot;, &quot;grade&quot;, &quot;a_stage&quot;, &quot;estrogen_status&quot;, &quot;progesterone_status&quot;)
+available_interaction_term = c()
+selected_features = c(&quot;positive_ratio&quot;)
+best_model = glm(formula = status ~ positive_ratio, data = train_df, family = binomial())</code></pre>
+<pre class="r"><code>while (1) {
+  
+  remaining_features = c(available_single_predictors, available_interaction_term)
+  candidate_models = list()
+  
+  for (feature in remaining_features) {
+    formula = paste(&quot;status ~ &quot;, paste(c(selected_features, feature), collapse = &quot; + &quot;), sep = &quot;&quot;)
+    candidate_model = glm(formula, data = train_df, family = binomial())
+    candidate_models[[feature]] = candidate_model
+  }
+  
+  best_candidate = candidate_models[[which.min(sapply(candidate_models, AIC))]]
+  
+  if (AIC(best_candidate) &lt; AIC(best_model)) {
+    best_model = best_candidate
+    formula = best_candidate$formula
+    char_selected_features = sub(&quot;^status ~\\s*&quot;, &quot;&quot;, formula)
+    selected_features = unlist(strsplit(char_selected_features, &quot;\\s*\\+\\s*&quot;))
+    predictor_in_model = all_single_predictors[all_single_predictors %in% selected_features]
+    available_single_predictors = all_single_predictors[!all_single_predictors %in% selected_features]
+    available_interaction_term = concat_predictors(predictor_in_model)
+    available_interaction_term = available_interaction_term[!available_interaction_term %in% selected_features]
+  } else {
+    break  
+  }
+}</code></pre>
+<pre class="r"><code>summary(best_model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = formula, family = binomial(), data = train_df)
+## 
+## Coefficients:
+##                                         Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)                           -4.111e+00  8.268e-01  -4.972 6.64e-07
+## positive_ratio                         1.769e+00  7.645e-01   2.313 0.020697
+## estrogen_statusPositive                5.912e-02  8.047e-01   0.073 0.941427
+## n_stageN2                              5.302e-01  5.391e-01   0.984 0.325336
+## n_stageN3                              6.293e-01  7.851e-01   0.802 0.422828
+## t_stageT2                              1.946e+00  5.551e-01   3.506 0.000455
+## t_stageT3                              3.082e+00  7.098e-01   4.343 1.41e-05
+## t_stageT4                              3.182e+00  1.120e+00   2.841 0.004494
+## grade2                                 9.588e-01  3.759e-01   2.551 0.010753
+## grade3                                 1.441e+00  3.917e-01   3.677 0.000236
+## grade4                                -3.803e+02  1.005e+04  -0.038 0.969809
+## age                                    8.479e-01  8.123e-01   1.044 0.296578
+## progesterone_statusPositive           -5.970e-01  4.460e-01  -1.339 0.180708
+## raceOther                             -6.080e-01  7.655e-01  -0.794 0.426990
+## raceWhite                              4.068e-01  5.127e-01   0.793 0.427565
+## estrogen_statusPositive:t_stageT2     -7.056e-01  4.445e-01  -1.587 0.112420
+## estrogen_statusPositive:t_stageT3     -1.453e+00  5.632e-01  -2.579 0.009895
+## estrogen_statusPositive:t_stageT4     -2.582e+00  9.980e-01  -2.587 0.009679
+## n_stageN2:grade2                      -3.074e-01  5.155e-01  -0.596 0.551018
+## n_stageN3:grade2                      -7.549e-01  6.657e-01  -1.134 0.256753
+## n_stageN2:grade3                      -6.933e-01  5.387e-01  -1.287 0.198159
+## n_stageN3:grade3                      -4.174e-01  6.896e-01  -0.605 0.545009
+## n_stageN2:grade4                       3.335e+02  9.326e+03   0.036 0.971472
+## n_stageN3:grade4                       6.360e+01  2.863e+03   0.022 0.982278
+## progesterone_statusPositive:raceOther  3.232e+00  1.405e+00   2.300 0.021437
+## progesterone_statusPositive:raceWhite -2.057e-02  4.723e-01  -0.044 0.965267
+## estrogen_statusPositive:raceOther     -3.288e+00  1.453e+00  -2.263 0.023648
+## estrogen_statusPositive:raceWhite     -9.678e-01  6.461e-01  -1.498 0.134119
+## t_stageT2:age                         -1.123e+00  5.776e-01  -1.944 0.051943
+## t_stageT3:age                         -1.927e+00  7.369e-01  -2.615 0.008922
+## t_stageT4:age                         -2.107e+00  1.269e+00  -1.661 0.096757
+## positive_ratio:grade2                 -7.576e-01  7.811e-01  -0.970 0.332063
+## positive_ratio:grade3                 -9.986e-01  8.253e-01  -1.210 0.226296
+## positive_ratio:grade4                  4.472e+02  1.189e+04   0.038 0.970004
+## estrogen_statusPositive:age            1.193e+00  7.314e-01   1.630 0.103001
+## positive_ratio:t_stageT2              -2.407e-01  4.009e-01  -0.600 0.548373
+## positive_ratio:t_stageT3              -1.740e-01  5.342e-01  -0.326 0.744642
+## positive_ratio:t_stageT4               2.279e+00  1.143e+00   1.994 0.046104
+## positive_ratio:n_stageN2               7.521e-01  5.368e-01   1.401 0.161158
+## positive_ratio:n_stageN3               1.135e+00  6.559e-01   1.731 0.083410
+##                                          
+## (Intercept)                           ***
+## positive_ratio                        *  
+## estrogen_statusPositive                  
+## n_stageN2                                
+## n_stageN3                                
+## t_stageT2                             ***
+## t_stageT3                             ***
+## t_stageT4                             ** 
+## grade2                                *  
+## grade3                                ***
+## grade4                                   
+## age                                      
+## progesterone_statusPositive              
+## raceOther                                
+## raceWhite                                
+## estrogen_statusPositive:t_stageT2        
+## estrogen_statusPositive:t_stageT3     ** 
+## estrogen_statusPositive:t_stageT4     ** 
+## n_stageN2:grade2                         
+## n_stageN3:grade2                         
+## n_stageN2:grade3                         
+## n_stageN3:grade3                         
+## n_stageN2:grade4                         
+## n_stageN3:grade4                         
+## progesterone_statusPositive:raceOther *  
+## progesterone_statusPositive:raceWhite    
+## estrogen_statusPositive:raceOther     *  
+## estrogen_statusPositive:raceWhite        
+## t_stageT2:age                         .  
+## t_stageT3:age                         ** 
+## t_stageT4:age                         .  
+## positive_ratio:grade2                    
+## positive_ratio:grade3                    
+## positive_ratio:grade4                    
+## estrogen_statusPositive:age              
+## positive_ratio:t_stageT2                 
+## positive_ratio:t_stageT3                 
+## positive_ratio:t_stageT4              *  
+## positive_ratio:n_stageN2                 
+## positive_ratio:n_stageN3              .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2756.7  on 3219  degrees of freedom
+## Residual deviance: 2329.5  on 3180  degrees of freedom
+## AIC: 2409.5
+## 
+## Number of Fisher Scoring iterations: 18</code></pre>
+<pre class="r"><code>selected_result = predict(best_model, newdata = test_df, type = &#39;response&#39;)
+selected_result = selected_result|&gt;
+  as.data.frame()|&gt;
+  mutate(actual = test_df$status)
+selected_result = selected_result|&gt;
+  mutate(prediction = ifelse(selected_result &gt; 0.5, &quot;Dead&quot;, &quot;Alive&quot;))|&gt;
+  mutate(prediction = factor(prediction))
+confusionMatrix(data=pull(selected_result, prediction), reference = pull(selected_result, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   669   98
+##      Dead     12   25
+##                                           
+##                Accuracy : 0.8632          
+##                  95% CI : (0.8375, 0.8862)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.1092          
+##                                           
+##                   Kappa : 0.2602          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 5.299e-16       
+##                                           
+##             Sensitivity : 0.9824          
+##             Specificity : 0.2033          
+##          Pos Pred Value : 0.8722          
+##          Neg Pred Value : 0.6757          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8321          
+##    Detection Prevalence : 0.9540          
+##       Balanced Accuracy : 0.5928          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+</div>
+<div id="use-l1-norm-to-regularize-model" class="section level3">
+<h3>use L1 norm to regularize model</h3>
+<pre class="r"><code>lasso_cv_model &lt;- cv.glmnet(x = as.matrix(train_covariate), 
+                    y = train_df$status, 
+                    alpha = 1, 
+                    family = &quot;binomial&quot;, 
+                    nfolds = 5)</code></pre>
+<pre class="r"><code>print(lasso_cv_model)</code></pre>
+<pre><code>## 
+## Call:  cv.glmnet(x = as.matrix(train_covariate), y = train_df$status,      nfolds = 5, alpha = 1, family = &quot;binomial&quot;) 
+## 
+## Measure: Binomial Deviance 
+## 
+##      Lambda Index Measure      SE Nonzero
+## min 0.00129    46  0.7847 0.03026       4
+## 1se 0.04035     9  0.8136 0.02856       2</code></pre>
+<pre class="r"><code>lasso_model = glmnet(
+  x = as.matrix(train_covariate), 
+  y = train_df$status, 
+  lambda = 0.00129,
+  alpha=1, 
+  family = &quot;binomial&quot;
+  )</code></pre>
+<pre><code>## Warning in storage.mode(xd) &lt;- &quot;double&quot;: NAs introduced by coercion</code></pre>
+<pre class="r"><code>lasso_result = predict(lasso_model, s = 0.00143, newx = as.matrix(test_covariate), type = &#39;response&#39;)</code></pre>
+<pre><code>## Warning in cbind2(1, newx) %*% nbeta: NAs introduced by coercion</code></pre>
+<pre class="r"><code>result = as.data.frame(lasso_result)|&gt;
+  mutate(prediction = ifelse(s1 &gt; 0.4, &quot;Dead&quot;, &quot;Alive&quot;))|&gt;
+  mutate(prediction = factor(prediction))|&gt;
+  mutate(actual = test_df$status)
+
+coef(lasso_model)</code></pre>
+<pre><code>## 12 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                             s0
+## (Intercept)         -4.4267203
+## age                  0.7169222
+## race                 .        
+## marital_status       .        
+## t_stage              .        
+## n_stage              .        
+## grade                0.5852568
+## a_stage              .        
+## tumor_size           1.2908814
+## estrogen_status      .        
+## progesterone_status  .        
+## positive_ratio       1.7385197</code></pre>
+<pre class="r"><code>confusionMatrix(data=pull(result, prediction), reference = pull(result, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   667   97
+##      Dead     14   26
+##                                          
+##                Accuracy : 0.8619         
+##                  95% CI : (0.8361, 0.885)
+##     No Information Rate : 0.847          
+##     P-Value [Acc &gt; NIR] : 0.1292         
+##                                          
+##                   Kappa : 0.2637         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 7.077e-15      
+##                                          
+##             Sensitivity : 0.9794         
+##             Specificity : 0.2114         
+##          Pos Pred Value : 0.8730         
+##          Neg Pred Value : 0.6500         
+##              Prevalence : 0.8470         
+##          Detection Rate : 0.8296         
+##    Detection Prevalence : 0.9502         
+##       Balanced Accuracy : 0.5954         
+##                                          
+##        &#39;Positive&#39; Class : Alive          
+## </code></pre>
+<p>We could see that only age, grade, tumor_size and positive ratio have
+non-zero coefficient. However, the P-Value [Acc &gt; NIR] still shows it
+is not good though. We are not sure what caused such result. Our first
+hypothesis is that the imbalanced data caused such result.</p>
+</div>
+<div id="use-backward-to-select-features" class="section level3">
+<h3>use backward to select features</h3>
+<p>We only delete tumor size and marital status for threshold of 0.05 p
+value.</p>
+<pre class="r"><code>ctrl = trainControl(method = &quot;cv&quot;, number = 5)
+selected_model = train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)</code></pre>
+<pre class="r"><code>selected_result = predict(selected_model, newdata = test_df, type = &#39;prob&#39;)
+selected_result = selected_result|&gt;
+  as.data.frame()|&gt;
+  mutate(actual = test_df$status)|&gt;
+  mutate(selected_result = ifelse(Alive &gt; 0.495, &quot;Alive&quot;, &quot;Dead&quot;))|&gt;
+  mutate(selected_result = factor(selected_result))</code></pre>
+<pre class="r"><code>confusionMatrix(data=pull(selected_result, selected_result), reference = pull(selected_result, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   675  100
+##      Dead      6   23
+##                                           
+##                Accuracy : 0.8682          
+##                  95% CI : (0.8428, 0.8908)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.05088         
+##                                           
+##                   Kappa : 0.2594          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 0.9912          
+##             Specificity : 0.1870          
+##          Pos Pred Value : 0.8710          
+##          Neg Pred Value : 0.7931          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8396          
+##    Detection Prevalence : 0.9639          
+##       Balanced Accuracy : 0.5891          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>summary(selected_model)</code></pre>
+<pre><code>## 
+## Call:
+## NULL
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                  -2.2220     0.3404  -6.529 6.63e-11 ***
+## age                           0.8273     0.2336   3.541 0.000398 ***
+## grade2                        0.4499     0.2020   2.227 0.025924 *  
+## grade3                        0.7781     0.2122   3.667 0.000245 ***
+## grade4                        1.3993     0.6375   2.195 0.028176 *  
+## positive_ratio                1.2068     0.2101   5.745 9.22e-09 ***
+## raceOther                    -0.7505     0.2678  -2.802 0.005073 ** 
+## raceWhite                    -0.3875     0.1764  -2.196 0.028067 *  
+## t_stageT2                     0.4722     0.1255   3.761 0.000169 ***
+## t_stageT3                     0.5098     0.1652   3.085 0.002032 ** 
+## t_stageT4                     0.9710     0.2674   3.632 0.000282 ***
+## n_stageN2                     0.3876     0.1332   2.909 0.003623 ** 
+## n_stageN3                     0.7594     0.1729   4.391 1.13e-05 ***
+## estrogen_statusPositive      -0.8717     0.2005  -4.347 1.38e-05 ***
+## progesterone_statusPositive  -0.4866     0.1443  -3.373 0.000744 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2756.7  on 3219  degrees of freedom
+## Residual deviance: 2402.3  on 3205  degrees of freedom
+## AIC: 2432.3
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div id="stepwise-using-aic" class="section level3">
+<h3>stepwise using AIC</h3>
+<pre class="r"><code>logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + grade + a_stage + tumor_size + estrogen_status + progesterone_status + positive_ratio, data = train_df, family = binomial())
+step(logistic_model, direction = &quot;both&quot;, trace = 0, k = 2)</code></pre>
+<pre><code>## 
+## Call:  glm(formula = status ~ age + race + t_stage + n_stage + grade + 
+##     estrogen_status + progesterone_status + positive_ratio, family = binomial(), 
+##     data = train_df)
+## 
+## Coefficients:
+##                 (Intercept)                          age  
+##                     -2.2220                       0.8273  
+##                   raceOther                    raceWhite  
+##                     -0.7505                      -0.3875  
+##                   t_stageT2                    t_stageT3  
+##                      0.4722                       0.5098  
+##                   t_stageT4                    n_stageN2  
+##                      0.9710                       0.3876  
+##                   n_stageN3                       grade2  
+##                      0.7594                       0.4499  
+##                      grade3                       grade4  
+##                      0.7781                       1.3993  
+##     estrogen_statusPositive  progesterone_statusPositive  
+##                     -0.8717                      -0.4866  
+##              positive_ratio  
+##                      1.2068  
+## 
+## Degrees of Freedom: 3219 Total (i.e. Null);  3205 Residual
+## Null Deviance:       2757 
+## Residual Deviance: 2402  AIC: 2432</code></pre>
+<p>It select, positive ratio, estrogen status, progesterone status, t
+stage, n stage, race, age. This is same as the P-value based model.</p>
+</div>
+<div id="stepwise-using-bic" class="section level3">
+<h3>stepwise using BIC</h3>
+<pre class="r"><code>logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + grade + a_stage + tumor_size + estrogen_status + progesterone_status + positive_ratio, data = train_df, family = binomial())
+step(logistic_model, direction = &quot;both&quot;, trace = 0, k = log(nrow(train_df)))</code></pre>
+<pre><code>## 
+## Call:  glm(formula = status ~ age + n_stage + tumor_size + estrogen_status + 
+##     progesterone_status + positive_ratio, family = binomial(), 
+##     data = train_df)
+## 
+## Coefficients:
+##                 (Intercept)                          age  
+##                     -1.8041                       0.7581  
+##                   n_stageN2                    n_stageN3  
+##                      0.4653                       0.8844  
+##                  tumor_size      estrogen_statusPositive  
+##                      1.0537                      -1.0235  
+## progesterone_statusPositive               positive_ratio  
+##                     -0.5346                       1.1933  
+## 
+## Degrees of Freedom: 3219 Total (i.e. Null);  3212 Residual
+## Null Deviance:       2757 
+## Residual Deviance: 2445  AIC: 2461</code></pre>
+<p>Result shows age, n stage, tumor size, estrogen status, progesterone
+status, and positive ratio was included. So the difference in race is
+not selected and size is included.</p>
+<pre class="r"><code>ctrl = trainControl(method = &quot;cv&quot;, number = 5)
+selected_model = train(status ~ age + grade + positive_ratio + tumor_size + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)</code></pre>
+<pre class="r"><code>selected_result = predict(selected_model, newdata = test_df)
+selected_result = selected_result|&gt;
+  as.data.frame()|&gt;
+  mutate(actual = test_df$status)</code></pre>
+<pre class="r"><code>confusionMatrix(data=pull(selected_result, selected_result), reference = pull(selected_result, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   674  100
+##      Dead      7   23
+##                                           
+##                Accuracy : 0.8669          
+##                  95% CI : (0.8415, 0.8896)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.06244         
+##                                           
+##                   Kappa : 0.256           
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 0.9897          
+##             Specificity : 0.1870          
+##          Pos Pred Value : 0.8708          
+##          Neg Pred Value : 0.7667          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8383          
+##    Detection Prevalence : 0.9627          
+##       Balanced Accuracy : 0.5884          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>summary(selected_model)</code></pre>
+<pre><code>## 
+## Call:
+## NULL
+## 
+## Coefficients:
+##                             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                  -2.6367     0.3095  -8.519  &lt; 2e-16 ***
+## age                           0.8459     0.2324   3.641 0.000272 ***
+## grade2                        0.4565     0.2018   2.262 0.023700 *  
+## grade3                        0.7978     0.2119   3.766 0.000166 ***
+## grade4                        1.4552     0.6309   2.306 0.021086 *  
+## positive_ratio                1.2005     0.2099   5.719 1.07e-08 ***
+## tumor_size                    0.3260     0.6061   0.538 0.590666    
+## t_stageT2                     0.4209     0.1457   2.888 0.003872 ** 
+## t_stageT3                     0.3710     0.2967   1.250 0.211235    
+## t_stageT4                     0.8739     0.3202   2.729 0.006351 ** 
+## n_stageN2                     0.3817     0.1333   2.863 0.004194 ** 
+## n_stageN3                     0.7544     0.1733   4.354 1.34e-05 ***
+## estrogen_statusPositive      -0.8796     0.2000  -4.399 1.09e-05 ***
+## progesterone_statusPositive  -0.4857     0.1440  -3.373 0.000744 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2756.7  on 3219  degrees of freedom
+## Residual deviance: 2410.3  on 3206  degrees of freedom
+## AIC: 2438.3
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div id="random-forest" class="section level3">
+<h3>random forest</h3>
+<pre class="r"><code>library(randomForest)</code></pre>
+<pre><code>## randomForest 4.7-1.1</code></pre>
+<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre><code>## 
+## Attaching package: &#39;randomForest&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     margin</code></pre>
+<pre class="r"><code>rf_model = randomForest(status ~ ., data = train_df, ntree = 5000, class.weights = c(85, 15), importance = TRUE)</code></pre>
+<pre class="r"><code>rf_predictions = predict(rf_model, newdata = test_df)
+
+confusionMatrix(data=rf_predictions, reference = pull(test_df, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   669  102
+##      Dead     12   21
+##                                           
+##                Accuracy : 0.8582          
+##                  95% CI : (0.8322, 0.8816)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.2035          
+##                                           
+##                   Kappa : 0.2187          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16          
+##                                           
+##             Sensitivity : 0.9824          
+##             Specificity : 0.1707          
+##          Pos Pred Value : 0.8677          
+##          Neg Pred Value : 0.6364          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8321          
+##    Detection Prevalence : 0.9590          
+##       Balanced Accuracy : 0.5766          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<p>We could see that random forest didn’t improve the balanced accuracy
+in original data and resampled data. So it is highly possible that there
+are no interaction term in our covaraite.</p>
+<pre class="r"><code>var_importance = varImp(rf_model, conditional=TRUE)
+var_importance = var_importance |&gt;
+  tibble::rownames_to_column(&quot;var&quot;) 
+var_importance$var = var_importance$var |&gt;
+  as.factor()
+
+ggplot(data = var_importance) + 
+  geom_bar(
+    stat = &quot;identity&quot;,
+    mapping = aes(x = reorder(var,abs(Alive)), y=abs(Alive), fill = var), 
+    show.legend = FALSE,
+    width = 1
+  ) + 
+  labs(x = NULL, y = NULL)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+</div>
+</div>
+<div id="biological-hypothesis" class="section level2">
+<h2>Biological Hypothesis</h2>
+<div id="missing-her2-info" class="section level3">
+<h3>missing Her2 info</h3>
+<p>Our second hypothesis is that maybe there are some information that
+not included in the dataset. As we know, breast cancer can be classified
+as LumA, LumB, Her2+, and TNBC. Triple-negative breast cancer has the
+worst prognosis in all breast cancer. But our dataset only include
+estrogen and progesterone receptor, it does not contain information of
+Her+ receptor.</p>
+<p>If they are positive in either estrogen or progesterone, the
+prognosis will be good since we could use hormone therapy and prognosis
+is good. While when they are both negative, if the cancer is Her2
+positive, we could use trastuzumab treatment. Only when all three are
+negative, we could only use chemo therapy. So if include Her2
+information we could distinguish more TNBC patient and this might
+increase the accuracy of death.</p>
+<p>Also, income information might also affect prognosis since this
+decide whether they could use latest therapy like hormone therapy,
+trastuzumab therapy, or they could only afford chemo therapy.</p>
+</div>
+</div>
+<div id="imbalance-race" class="section level2">
+<h2>Imbalance Race</h2>
+<pre class="r"><code>white_test&lt;-test_df%&gt;%
+  filter(race == &quot;White&quot;)
+
+
+pre_wh &lt;- predict(selected_model,newdata = white_test)
+
+confusionMatrix(data=pre_wh, reference = pull(white_test, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   589   81
+##      Dead      6   22
+##                                          
+##                Accuracy : 0.8754         
+##                  95% CI : (0.8485, 0.899)
+##     No Information Rate : 0.8524         
+##     P-Value [Acc &gt; NIR] : 0.04668        
+##                                          
+##                   Kappa : 0.2912         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 2.128e-15      
+##                                          
+##             Sensitivity : 0.9899         
+##             Specificity : 0.2136         
+##          Pos Pred Value : 0.8791         
+##          Neg Pred Value : 0.7857         
+##              Prevalence : 0.8524         
+##          Detection Rate : 0.8438         
+##    Detection Prevalence : 0.9599         
+##       Balanced Accuracy : 0.6018         
+##                                          
+##        &#39;Positive&#39; Class : Alive          
+## </code></pre>
+<pre class="r"><code>nwhite_test&lt;-test_df%&gt;%
+  filter(race != &quot;White&quot;)
+
+nwhite &lt;-test_df%&gt;%filter(race != &quot;White&quot;)
+
+
+pre_nwh &lt;- predict(selected_model,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive    85   19
+##      Dead      1    1
+##                                           
+##                Accuracy : 0.8113          
+##                  95% CI : (0.7238, 0.8808)
+##     No Information Rate : 0.8113          
+##     P-Value [Acc &gt; NIR] : 0.5594165       
+##                                           
+##                   Kappa : 0.0586          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.0001439       
+##                                           
+##             Sensitivity : 0.9884          
+##             Specificity : 0.0500          
+##          Pos Pred Value : 0.8173          
+##          Neg Pred Value : 0.5000          
+##              Prevalence : 0.8113          
+##          Detection Rate : 0.8019          
+##    Detection Prevalence : 0.9811          
+##       Balanced Accuracy : 0.5192          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>#Stratify before splitting the training set
+
+white_df&lt;-data_df%&gt;%
+  filter(race == &quot;White&quot;)
+
+
+
+set.seed(3407)
+
+trainIndex = createDataPartition(white_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+white_train_df = white_df[trainIndex, ]
+white_test_df = white_df[-trainIndex, ]
+
+selected_model_white = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = white_train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)
+
+
+pre_wh &lt;- predict(selected_model_white,newdata = white_test_df)
+
+confusionMatrix(data=pre_wh, reference = pull(white_test_df, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   566   83
+##      Dead     14   19
+##                                           
+##                Accuracy : 0.8578          
+##                  95% CI : (0.8293, 0.8831)
+##     No Information Rate : 0.8504          
+##     P-Value [Acc &gt; NIR] : 0.3179          
+##                                           
+##                   Kappa : 0.2248          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 5.043e-12       
+##                                           
+##             Sensitivity : 0.9759          
+##             Specificity : 0.1863          
+##          Pos Pred Value : 0.8721          
+##          Neg Pred Value : 0.5758          
+##              Prevalence : 0.8504          
+##          Detection Rate : 0.8299          
+##    Detection Prevalence : 0.9516          
+##       Balanced Accuracy : 0.5811          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>#non-white
+
+nwhite_df&lt;-data_df%&gt;%
+  filter(race != &quot;White&quot;)
+
+set.seed(3407)
+
+trainIndex = createDataPartition(nwhite_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+nwhite_train_df = nwhite_df[trainIndex, ]
+nwhite_test_df = nwhite_df[-trainIndex, ]
+
+
+selected_model_nwhite = train(status ~ age + grade + positive_ratio+ t_stage + n_stage + estrogen_status + progesterone_status, data = nwhite_train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)
+
+
+pre_nwh &lt;- predict(selected_model_nwhite,newdata = nwhite_test_df)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite_test_df, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   100   19
+##      Dead      1    2
+##                                           
+##                Accuracy : 0.8361          
+##                  95% CI : (0.7582, 0.8969)
+##     No Information Rate : 0.8279          
+##     P-Value [Acc &gt; NIR] : 0.4626568       
+##                                           
+##                   Kappa : 0.1292          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.0001439       
+##                                           
+##             Sensitivity : 0.99010         
+##             Specificity : 0.09524         
+##          Pos Pred Value : 0.84034         
+##          Neg Pred Value : 0.66667         
+##              Prevalence : 0.82787         
+##          Detection Rate : 0.81967         
+##    Detection Prevalence : 0.97541         
+##       Balanced Accuracy : 0.54267         
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>##Stratify after splitting the training set
+
+white_test&lt;-test_df%&gt;%
+  filter(race == &quot;White&quot;)
+
+nwhite_test &lt;-test_df%&gt;%filter(race != &quot;White&quot;)
+
+white_train&lt;-train_df%&gt;%
+  filter(race == &quot;White&quot;)
+
+nwhite_train &lt;-train_df%&gt;%filter(race != &quot;White&quot;)
+
+
+selected_model_white1 = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = white_train, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)
+
+selected_model_nwhite1 = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = nwhite_train, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)
+
+
+pre_wh1 &lt;- predict(selected_model_white1,newdata = white_test)
+
+confusionMatrix(data=pre_wh1, reference = pull(white_test, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   585   79
+##      Dead     10   24
+##                                           
+##                Accuracy : 0.8725          
+##                  95% CI : (0.8455, 0.8963)
+##     No Information Rate : 0.8524          
+##     P-Value [Acc &gt; NIR] : 0.07277         
+##                                           
+##                   Kappa : 0.299           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 5.679e-13       
+##                                           
+##             Sensitivity : 0.9832          
+##             Specificity : 0.2330          
+##          Pos Pred Value : 0.8810          
+##          Neg Pred Value : 0.7059          
+##              Prevalence : 0.8524          
+##          Detection Rate : 0.8381          
+##    Detection Prevalence : 0.9513          
+##       Balanced Accuracy : 0.6081          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>pre_nwh1 &lt;- predict(selected_model_nwhite1,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh1, reference = pull(nwhite_test, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive    85   20
+##      Dead      1    0
+##                                          
+##                Accuracy : 0.8019         
+##                  95% CI : (0.7132, 0.873)
+##     No Information Rate : 0.8113         
+##     P-Value [Acc &gt; NIR] : 0.6533         
+##                                          
+##                   Kappa : -0.0183        
+##                                          
+##  Mcnemar&#39;s Test P-Value : 8.568e-05      
+##                                          
+##             Sensitivity : 0.9884         
+##             Specificity : 0.0000         
+##          Pos Pred Value : 0.8095         
+##          Neg Pred Value : 0.0000         
+##              Prevalence : 0.8113         
+##          Detection Rate : 0.8019         
+##    Detection Prevalence : 0.9906         
+##       Balanced Accuracy : 0.4942         
+##                                          
+##        &#39;Positive&#39; Class : Alive          
+## </code></pre>
+<pre class="r"><code># Test overall accuracy
+#Stratify after splitting the training set
+df_bind&lt;-white_test %&gt;% rbind(nwhite_test)
+
+
+df_bind_pre&lt;-c(pre_wh1,pre_nwh1)%&gt;%as.data.frame()
+
+binddf&lt;- cbind(pull(df_bind,status),df_bind_pre)
+colnames(binddf)&lt;-c(&quot;actual&quot;,&quot;predict&quot;)
+
+confusionMatrix(data=pull(binddf, predict), reference = pull(binddf, actual))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   670   99
+##      Dead     11   24
+##                                           
+##                Accuracy : 0.8632          
+##                  95% CI : (0.8375, 0.8862)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.1092          
+##                                           
+##                   Kappa : 0.2532          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16          
+##                                           
+##             Sensitivity : 0.9838          
+##             Specificity : 0.1951          
+##          Pos Pred Value : 0.8713          
+##          Neg Pred Value : 0.6857          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8333          
+##    Detection Prevalence : 0.9565          
+##       Balanced Accuracy : 0.5895          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>#test threshold
+
+selected_model_white = train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;)
+
+
+predicted_probabilities &lt;- predict(selected_model_white,newdata = test_df,type = &quot;prob&quot;)
+
+threshold &lt;- 0.58
+
+predicted_class &lt;- ifelse(predicted_probabilities[, &quot;Alive&quot;] &gt; threshold, &quot;Alive&quot;, &quot;Dead&quot;)%&gt;%
+  as.data.frame()%&gt;%
+  mutate(predict = factor(.))%&gt;%
+  mutate(actual = test_df$status)
+  
+
+confusionMatrix(data=predicted_class$predict, reference = pull(test_df, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   665   86
+##      Dead     16   37
+##                                           
+##                Accuracy : 0.8731          
+##                  95% CI : (0.8481, 0.8954)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.02037         
+##                                           
+##                   Kappa : 0.3616          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 8.373e-12       
+##                                           
+##             Sensitivity : 0.9765          
+##             Specificity : 0.3008          
+##          Pos Pred Value : 0.8855          
+##          Neg Pred Value : 0.6981          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8271          
+##    Detection Prevalence : 0.9341          
+##       Balanced Accuracy : 0.6387          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code># separately calculate the proportion
+
+sum(white_df$race == &quot;White&quot;&amp; white_df$status == &quot;Alive&quot;)/nrow(white_df)</code></pre>
+<pre><code>## [1] 0.8505713</code></pre>
+<pre class="r"><code>sum(nwhite_df$race != &quot;White&quot;&amp; nwhite_df$status == &quot;Alive&quot;)/nrow(nwhite_df)</code></pre>
+<pre><code>## [1] 0.8265139</code></pre>
+<pre class="r"><code>weight_vector &lt;- ifelse(train_df$race == &quot;White&quot;, 7,9)
+
+control &lt;- trainControl(method = &quot;boot&quot;, number = 40, sampling = &quot;down&quot;)
+
+logistic_model_weight &lt;- train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = &quot;glm&quot;,
+                  trControl = ctrl, family = &quot;binomial&quot;,weights = weight_vector)
+
+pre_nwh &lt;- predict(logistic_model_weight,newdata = test_df)
+
+confusionMatrix(data=pre_nwh, reference = pull(test_df, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive   675  101
+##      Dead      6   22
+##                                           
+##                Accuracy : 0.8669          
+##                  95% CI : (0.8415, 0.8896)
+##     No Information Rate : 0.847           
+##     P-Value [Acc &gt; NIR] : 0.06244         
+##                                           
+##                   Kappa : 0.2488          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 0.9912          
+##             Specificity : 0.1789          
+##          Pos Pred Value : 0.8698          
+##          Neg Pred Value : 0.7857          
+##              Prevalence : 0.8470          
+##          Detection Rate : 0.8396          
+##    Detection Prevalence : 0.9652          
+##       Balanced Accuracy : 0.5850          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+<pre class="r"><code>pre_nwh &lt;- predict(logistic_model_weight,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite_test, status))</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Alive Dead
+##      Alive    85   19
+##      Dead      1    1
+##                                           
+##                Accuracy : 0.8113          
+##                  95% CI : (0.7238, 0.8808)
+##     No Information Rate : 0.8113          
+##     P-Value [Acc &gt; NIR] : 0.5594165       
+##                                           
+##                   Kappa : 0.0586          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.0001439       
+##                                           
+##             Sensitivity : 0.9884          
+##             Specificity : 0.0500          
+##          Pos Pred Value : 0.8173          
+##          Neg Pred Value : 0.5000          
+##              Prevalence : 0.8113          
+##          Detection Rate : 0.8019          
+##    Detection Prevalence : 0.9811          
+##       Balanced Accuracy : 0.5192          
+##                                           
+##        &#39;Positive&#39; Class : Alive           
+## </code></pre>
+</div>
+<div id="survival-model" class="section level2">
+<h2>Survival Model</h2>
+<pre class="r"><code>survival_df = read_csv(&quot;dataset/Project_2_data.csv&quot;)|&gt;
+  janitor::clean_names()|&gt;
+  mutate(grade = ifelse(grade == &quot;anaplastic; Grade IV&quot;, 4, grade))|&gt;
+  mutate(
+    t_stage = factor(t_stage),
+    race = factor(race),
+    marital_status = factor(marital_status),
+    n_stage = factor(n_stage),
+    x6th_stage = factor(x6th_stage),
+    differentiate = factor(differentiate),
+    a_stage = factor(a_stage), 
+    estrogen_status = factor(estrogen_status),
+    progesterone_status = factor(progesterone_status), 
+    status = factor(status),
+    grade = factor(grade)
+  )</code></pre>
+<pre><code>## Rows: 4024 Columns: 16
+## ── Column specification ───────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (11): Race, Marital Status, T Stage, N Stage, 6th Stage, differentiate, ...
+## dbl  (5): Age, Tumor Size, Regional Node Examined, Reginol Node Positive, Su...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>colnames(survival_df)</code></pre>
+<pre><code>##  [1] &quot;age&quot;                    &quot;race&quot;                   &quot;marital_status&quot;        
+##  [4] &quot;t_stage&quot;                &quot;n_stage&quot;                &quot;x6th_stage&quot;            
+##  [7] &quot;differentiate&quot;          &quot;grade&quot;                  &quot;a_stage&quot;               
+## [10] &quot;tumor_size&quot;             &quot;estrogen_status&quot;        &quot;progesterone_status&quot;   
+## [13] &quot;regional_node_examined&quot; &quot;reginol_node_positive&quot;  &quot;survival_months&quot;       
+## [16] &quot;status&quot;</code></pre>
+<p>still, we remove x6th_stage and differentiate since coxph also
+require no collinear</p>
+<pre class="r"><code>survival_df = survival_df|&gt;
+  subset(select = -c(x6th_stage, differentiate))|&gt;
+  mutate(positive_ratio = reginol_node_positive / regional_node_examined)|&gt;
+  subset(select = -c(reginol_node_positive, regional_node_examined))</code></pre>
+<p>change all categorical to dummy</p>
+<pre class="r"><code>factor_cols = colnames(survival_df)[!(colnames(survival_df) %in% c(&quot;age&quot;, &quot;tumor_size&quot;, &quot;positive_ratio&quot;, &quot;survival_months&quot;))]
+dummy_variables =  model.matrix(~.-1, data = survival_df[, factor_cols])
+survival_df = cbind(survival_df, dummy_variables)
+survival_df = survival_df[, -(which(names(survival_df) %in% factor_cols))]
+survival_df = survival_df|&gt;
+  subset(select = -c(raceWhite, marital_statusMarried))</code></pre>
+<pre class="r"><code>survival_obj = Surv(time = survival_df$survival_months, event = survival_df$statusDead)</code></pre>
+<pre class="r"><code>cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + marital_statusSeparated + marital_statusSingle + marital_statusWidowed + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4 + a_stageRegional + tumor_size + estrogen_statusPositive + progesterone_statusPositive + positive_ratio , data = survival_df)</code></pre>
+<pre class="r"><code>cox_zph = cox.zph(cox_model)
+summary(cox_model)</code></pre>
+<pre><code>## Call:
+## coxph(formula = survival_obj ~ age + raceBlack + raceOther + 
+##     marital_statusSeparated + marital_statusSingle + marital_statusWidowed + 
+##     t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + 
+##     grade2 + grade3 + grade4 + a_stageRegional + tumor_size + 
+##     estrogen_statusPositive + progesterone_statusPositive + positive_ratio, 
+##     data = survival_df)
+## 
+##   n= 4024, number of events= 616 
+## 
+##                                  coef exp(coef)  se(coef)      z Pr(&gt;|z|)    
+## age                          0.020321  1.020529  0.004857  4.184 2.86e-05 ***
+## raceBlack                    0.376511  1.457191  0.129380  2.910 0.003613 ** 
+## raceOther                   -0.395319  0.673465  0.180594 -2.189 0.028598 *  
+## marital_statusSeparated      0.605299  1.831800  0.270024  2.242 0.024984 *  
+## marital_statusSingle         0.132808  1.142031  0.110746  1.199 0.230445    
+## marital_statusWidowed        0.098606  1.103631  0.156611  0.630 0.528939    
+## t_stageT2                    0.332217  1.394056  0.113826  2.919 0.003516 ** 
+## t_stageT3                    0.383663  1.467651  0.219528  1.748 0.080521 .  
+## t_stageT4                    0.747877  2.112511  0.240890  3.105 0.001905 ** 
+## n_stageN2                    0.376558  1.457260  0.106384  3.540 0.000401 ***
+## n_stageN3                    0.604550  1.830429  0.132731  4.555 5.25e-06 ***
+## grade2                       0.445151  1.560725  0.170814  2.606 0.009159 ** 
+## grade3                       0.789504  2.202303  0.176606  4.470 7.81e-06 ***
+## grade4                       1.485543  4.417362  0.379515  3.914 9.07e-05 ***
+## a_stageRegional             -0.198498  0.819961  0.191723 -1.035 0.300511    
+## tumor_size                   0.001751  1.001753  0.003143  0.557 0.577409    
+## estrogen_statusPositive     -0.637951  0.528374  0.135097 -4.722 2.33e-06 ***
+## progesterone_statusPositive -0.493253  0.610637  0.106958 -4.612 3.99e-06 ***
+## positive_ratio               1.013932  2.756417  0.161246  6.288 3.21e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##                             exp(coef) exp(-coef) lower .95 upper .95
+## age                            1.0205     0.9799    1.0109    1.0303
+## raceBlack                      1.4572     0.6863    1.1308    1.8778
+## raceOther                      0.6735     1.4849    0.4727    0.9595
+## marital_statusSeparated        1.8318     0.5459    1.0790    3.1097
+## marital_statusSingle           1.1420     0.8756    0.9192    1.4189
+## marital_statusWidowed          1.1036     0.9061    0.8119    1.5001
+## t_stageT2                      1.3941     0.7173    1.1153    1.7425
+## t_stageT3                      1.4677     0.6814    0.9545    2.2568
+## t_stageT4                      2.1125     0.4734    1.3175    3.3872
+## n_stageN2                      1.4573     0.6862    1.1830    1.7951
+## n_stageN3                      1.8304     0.5463    1.4111    2.3743
+## grade2                         1.5607     0.6407    1.1167    2.1813
+## grade3                         2.2023     0.4541    1.5579    3.1132
+## grade4                         4.4174     0.2264    2.0995    9.2941
+## a_stageRegional                0.8200     1.2196    0.5631    1.1940
+## tumor_size                     1.0018     0.9983    0.9956    1.0079
+## estrogen_statusPositive        0.5284     1.8926    0.4055    0.6886
+## progesterone_statusPositive    0.6106     1.6376    0.4952    0.7531
+## positive_ratio                 2.7564     0.3628    2.0095    3.7809
+## 
+## Concordance= 0.744  (se = 0.011 )
+## Likelihood ratio test= 494.4  on 19 df,   p=&lt;2e-16
+## Wald test            = 564.7  on 19 df,   p=&lt;2e-16
+## Score (logrank) test = 648.2  on 19 df,   p=&lt;2e-16</code></pre>
+<p>There are some not significant variables, we uses backward
+elimination to delete them</p>
+<pre class="r"><code>new_cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4  + estrogen_statusPositive + progesterone_statusPositive + positive_ratio , data = survival_df)
+new_cox_model</code></pre>
+<pre><code>## Call:
+## coxph(formula = survival_obj ~ age + raceBlack + raceOther + 
+##     t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + 
+##     grade2 + grade3 + grade4 + estrogen_statusPositive + progesterone_statusPositive + 
+##     positive_ratio, data = survival_df)
+## 
+##                                  coef exp(coef)  se(coef)      z        p
+## age                          0.020068  1.020270  0.004705  4.265 2.00e-05
+## raceBlack                    0.421080  1.523606  0.126362  3.332 0.000861
+## raceOther                   -0.403445  0.668015  0.180426 -2.236 0.025347
+## t_stageT2                    0.368087  1.444968  0.100680  3.656 0.000256
+## t_stageT3                    0.472514  1.604022  0.127540  3.705 0.000212
+## t_stageT4                    0.887703  2.429542  0.183244  4.844 1.27e-06
+## n_stageN2                    0.378160  1.459596  0.105999  3.568 0.000360
+## n_stageN3                    0.624652  1.867597  0.130342  4.792 1.65e-06
+## grade2                       0.437260  1.548459  0.170718  2.561 0.010428
+## grade3                       0.782527  2.186993  0.176512  4.433 9.28e-06
+## grade4                       1.520736  4.575591  0.376304  4.041 5.32e-05
+## estrogen_statusPositive     -0.644622  0.524861  0.134422 -4.796 1.62e-06
+## progesterone_statusPositive -0.497745  0.607900  0.106445 -4.676 2.92e-06
+## positive_ratio               1.043611  2.839452  0.160621  6.497 8.17e-11
+## 
+## Likelihood ratio test=487.8  on 14 df, p=&lt; 2.2e-16
+## n= 4024, number of events= 616</code></pre>
+<p>We found the set of variables left are same as backward elimination
+for logistic models.</p>
+<pre class="r"><code>cox_zph = cox.zph(new_cox_model)
+ggcoxzph(cox_zph)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-77-1.png" width="672" />
+Two hormone receptor got p value smaller than 0.05, which violates the
+assumption, we will stratify them in our next model.</p>
+<pre class="r"><code>strat_cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4  + strata(estrogen_statusPositive) + strata(progesterone_statusPositive) + positive_ratio , data = survival_df)
+strat_cox_model</code></pre>
+<pre><code>## Call:
+## coxph(formula = survival_obj ~ age + raceBlack + raceOther + 
+##     t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + 
+##     grade2 + grade3 + grade4 + strata(estrogen_statusPositive) + 
+##     strata(progesterone_statusPositive) + positive_ratio, data = survival_df)
+## 
+##                     coef exp(coef)  se(coef)      z        p
+## age             0.019617  1.019811  0.004697  4.177 2.96e-05
+## raceBlack       0.429076  1.535837  0.126364  3.396 0.000685
+## raceOther      -0.393212  0.674885  0.180407 -2.180 0.029288
+## t_stageT2       0.364608  1.439950  0.100597  3.624 0.000290
+## t_stageT3       0.462568  1.588146  0.127612  3.625 0.000289
+## t_stageT4       0.868868  2.384210  0.183169  4.744 2.10e-06
+## n_stageN2       0.377326  1.458379  0.105869  3.564 0.000365
+## n_stageN3       0.619786  1.858530  0.130396  4.753 2.00e-06
+## grade2          0.436683  1.547566  0.170741  2.558 0.010540
+## grade3          0.779555  2.180502  0.176638  4.413 1.02e-05
+## grade4          1.520729  4.575560  0.377447  4.029 5.60e-05
+## positive_ratio  1.034063  2.812471  0.160516  6.442 1.18e-10
+## 
+## Likelihood ratio test=332.9  on 12 df, p=&lt; 2.2e-16
+## n= 4024, number of events= 616</code></pre>
+<pre class="r"><code>cox_zph = cox.zph(strat_cox_model)
+ggcoxzph(cox_zph)</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-79-1.png" width="672" />
+Now all variables have p value larger than 0.05, and global p value near
+to 1, so it follows the assumption</p>
+<pre class="r"><code>ggcoxdiagnostics(strat_cox_model, type = &quot;dfbeta&quot;,
+                 linear.predictions = FALSE, ggtheme = theme_bw())</code></pre>
+<pre><code>## Warning: `gather_()` was deprecated in tidyr 1.2.0.
+## ℹ Please use `gather()` instead.
+## ℹ The deprecated feature was likely used in the survminer package.
+##   Please report the issue at &lt;https://github.com/kassambara/survminer/issues&gt;.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-80-1.png" width="672" />
+All observations around 0, which suggest no influential
+observations.</p>
+<pre class="r"><code>ggcoxfunctional(Surv(survival_months, statusDead) ~ positive_ratio + age + tumor_size, data = survival_df)</code></pre>
+<pre><code>## Warning: arguments formula is deprecated; will be removed in the next version;
+## please use fit instead.</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-81-1.png" width="672" />
+The age looks quadratic, but from the scatter plot it still seems
+linear, we decide to include it in our model.</p>
+<pre class="r"><code>summary(strat_cox_model)</code></pre>
+<pre><code>## Call:
+## coxph(formula = survival_obj ~ age + raceBlack + raceOther + 
+##     t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + 
+##     grade2 + grade3 + grade4 + strata(estrogen_statusPositive) + 
+##     strata(progesterone_statusPositive) + positive_ratio, data = survival_df)
+## 
+##   n= 4024, number of events= 616 
+## 
+##                     coef exp(coef)  se(coef)      z Pr(&gt;|z|)    
+## age             0.019617  1.019811  0.004697  4.177 2.96e-05 ***
+## raceBlack       0.429076  1.535837  0.126364  3.396 0.000685 ***
+## raceOther      -0.393212  0.674885  0.180407 -2.180 0.029288 *  
+## t_stageT2       0.364608  1.439950  0.100597  3.624 0.000290 ***
+## t_stageT3       0.462568  1.588146  0.127612  3.625 0.000289 ***
+## t_stageT4       0.868868  2.384210  0.183169  4.744 2.10e-06 ***
+## n_stageN2       0.377326  1.458379  0.105869  3.564 0.000365 ***
+## n_stageN3       0.619786  1.858530  0.130396  4.753 2.00e-06 ***
+## grade2          0.436683  1.547566  0.170741  2.558 0.010540 *  
+## grade3          0.779555  2.180502  0.176638  4.413 1.02e-05 ***
+## grade4          1.520729  4.575560  0.377447  4.029 5.60e-05 ***
+## positive_ratio  1.034063  2.812471  0.160516  6.442 1.18e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##                exp(coef) exp(-coef) lower .95 upper .95
+## age               1.0198     0.9806    1.0105    1.0292
+## raceBlack         1.5358     0.6511    1.1989    1.9675
+## raceOther         0.6749     1.4817    0.4739    0.9612
+## t_stageT2         1.4399     0.6945    1.1823    1.7538
+## t_stageT3         1.5881     0.6297    1.2367    2.0395
+## t_stageT4         2.3842     0.4194    1.6651    3.4140
+## n_stageN2         1.4584     0.6857    1.1851    1.7947
+## n_stageN3         1.8585     0.5381    1.4394    2.3997
+## grade2            1.5476     0.6462    1.1074    2.1626
+## grade3            2.1805     0.4586    1.5424    3.0826
+## grade4            4.5756     0.2186    2.1835    9.5880
+## positive_ratio    2.8125     0.3556    2.0533    3.8523
+## 
+## Concordance= 0.705  (se = 0.013 )
+## Likelihood ratio test= 332.9  on 12 df,   p=&lt;2e-16
+## Wald test            = 351.1  on 12 df,   p=&lt;2e-16
+## Score (logrank) test = 391.7  on 12 df,   p=&lt;2e-16</code></pre>
+<pre class="r"><code>fit_selected_feature = survfit(strat_cox_model)
+plot_selected_feature = ggsurvplot(
+  fit_selected_feature,
+  data = survival_df,
+  conf.int = TRUE,
+  legend.title = &quot;Selected Feature Model&quot;, 
+  title.theme = &quot;margin&quot;)
+
+plot_selected_feature</code></pre>
+<p><img src="bm_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
+<pre class="r"><code>#ggsave(&quot;survival_model_curve.jpg&quot;)</code></pre>
+<p>We could see that the patient with both receptor have lower risk, and
+patient with no receptor have highest risk of death.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

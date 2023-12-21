@@ -1,0 +1,943 @@
+---
+title: "BM project"
+output: html_document
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(caret)
+library(glmnet)
+library(e1071)
+library(scales)
+library(leaps)
+library(survival)
+library(survminer)
+```
+
+## Data Import
+```{r}
+data_df = read_csv("dataset/Project_2_data.csv")|>
+  janitor::clean_names()|>
+  subset(select = -c(survival_months))|>
+  mutate(grade = ifelse(grade == "anaplastic; Grade IV", 4, grade))|>
+  mutate(
+    t_stage = factor(t_stage),
+    race = factor(race),
+    marital_status = factor(marital_status),
+    n_stage = factor(n_stage),
+    x6th_stage = factor(x6th_stage),
+    differentiate = factor(differentiate),
+    a_stage = factor(a_stage), 
+    estrogen_status = factor(estrogen_status),
+    progesterone_status = factor(progesterone_status), 
+    status = factor(status),
+    grade = factor(grade)
+  )
+
+colnames(data_df)
+```
+
+
+## EDA
+```{r}
+age_df = data_df|>
+  group_by(age) %>%
+  summarise(n=n())
+
+age_df %>%
+  ggplot(aes(x = age, y = n)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "age", y = "Count", 
+       title = "Distribution by age")
+```
+
+
+```{r}
+race_df = data_df|>
+  group_by(race) %>%
+  summarise(n=n())
+
+race_df %>%
+  ggplot(aes(x = race, y = n, fill = race)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "race", y = "Count", fill = "race", 
+       title = "Distribution by race")
+
+```
+
+```{r}
+marital_df = data_df|>
+  group_by(marital_status) %>%
+  summarise(n=n())
+
+marital_df %>%
+  ggplot(aes(x = marital_status, y = n, fill = marital_status)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "marital status", y = "Count", fill = "marital status", 
+       title = "Distribution by marital status")
+
+```
+
+```{r}
+t_df = data_df|>
+  group_by(t_stage) %>%
+  summarise(n=n())
+
+t_df %>%
+  ggplot(aes(x = t_stage, y = n, fill = t_stage)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "t_stage", y = "Count", fill = "t_stage", 
+       title = "Distribution by t_stage")
+
+```
+
+```{r}
+n_df = data_df|>
+  group_by(n_stage) %>%
+  summarise(n=n())
+
+n_df %>%
+  ggplot(aes(x = n_stage, y = n, fill = n_stage)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "n_stage", y = "Count", fill = "n_stage", 
+       title = "Distribution by n_stage")
+
+```
+
+```{r}
+x6_df = data_df|>
+  group_by(x6th_stage) %>%
+  summarise(n=n())
+
+x6_df %>%
+  ggplot(aes(x = x6th_stage, y = n, fill = x6th_stage)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "x6th_stage", y = "Count", fill = "x6th_stage", 
+       title = "Distribution by x6th_stage")
+
+```
+
+```{r}
+a_df = data_df|>
+  group_by(a_stage) %>%
+  summarise(n=n())
+
+a_df %>%
+  ggplot(aes(x = a_stage, y = n, fill = a_stage)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "a_stage", y = "Count", fill = "a_stage", 
+       title = "Distribution by a_stage")
+
+```
+
+```{r}
+grade_df = data_df|>
+  group_by(grade) %>%
+  summarise(n=n())
+
+grade_df %>%
+  ggplot(aes(x = grade, y = n, fill = grade)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "grade", y = "Count", fill = "grade", 
+       title = "Distribution by grade")
+
+```
+
+```{r}
+diff_df = data_df|>
+  group_by(differentiate) %>%
+  summarise(n=n())
+
+diff_df %>%
+  ggplot(aes(x = differentiate, y = n, fill = differentiate)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "differentiate", y = "Count", fill = "differentiate", 
+       title = "Distribution by differentiate")
+
+```
+
+```{r}
+size_df = data_df|>
+  group_by(tumor_size) %>%
+  summarise(n=n())
+
+size_df %>%
+  ggplot(aes(x = tumor_size, y = n)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "tumor size", y = "Count", 
+       title = "Distribution by tumor size")
+
+```
+
+```{r}
+estrogen_df = data_df|>
+  group_by(estrogen_status) %>%
+  summarise(n=n())
+
+estrogen_df %>%
+  ggplot(aes(x = estrogen_status, y = n, fill = estrogen_status)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "estrogen status", y = "Count", fill = "estrogen status", 
+       title = "Distribution by estrogen status")
+
+```
+
+```{r}
+pro_df = data_df|>
+  group_by(progesterone_status) %>%
+  summarise(n=n())
+
+pro_df %>%
+  ggplot(aes(x = progesterone_status, y = n, fill = progesterone_status)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "progesterone status", y = "Count", fill = "progesterone status", 
+       title = "Distribution by progesterone status")
+
+```
+
+```{r}
+nodeExam_df = data_df|>
+  group_by(regional_node_examined) %>%
+  summarise(n=n())
+
+nodeExam_df %>%
+  ggplot(aes(x = regional_node_examined, y = n)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "regional node examined", y = "Count", 
+       title = "Distribution by regional node examined")
+
+```
+
+```{r}
+nodePos_df = data_df|>
+  group_by(reginol_node_positive) %>%
+  summarise(n=n())
+
+nodePos_df %>%
+  ggplot(aes(x = reginol_node_positive, y = n)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(x = "regional node positive", y = "Count", 
+       title = "Distribution by regional node positive")
+
+```
+
+
+## Preparation before Modeling
+
+### check colinear
+```{r}
+logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + x6th_stage + differentiate + grade + a_stage + tumor_size + estrogen_status + progesterone_status + regional_node_examined + reginol_node_positive, data = data_df, family = binomial())
+```
+
+```{r}
+summary(logistic_model)
+```
+We noticed that there are Na in our coefficient, which might means existed collinearlity. 
+
+```{r}
+df_total_stage = data_df|>
+  mutate(
+    t_stage = as.character(t_stage), 
+    n_stage = as.character(n_stage), 
+    x6th_stage = as.character(x6th_stage), 
+    stage = paste(t_stage, n_stage, x6th_stage, sep = "-")
+  )
+
+unique(df_total_stage$stage)
+```
+
+We could see that in our dataset, IIIC is collinear with N3, so this will be the reason why there is NA for IIIC. Also, base on research the x6th_stage was decided by t_stage and n_stage. So it is a redundant variable, we should delete this variable. (https://web2.facs.org/cstage0204/breast/Breast_qad.html)
+
+```{r}
+df_total_grade = data_df|>
+  mutate(
+    differentiate = as.character(differentiate), 
+    grade = as.character(grade),
+    grade_total = paste(differentiate, grade, sep = "-")
+  )
+
+unique(df_total_grade$grade_total)
+```
+
+Also we noticed that the grade and differentiate is linked, it is also a redundant variable. 
+
+```{r}
+logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + differentiate + a_stage + tumor_size + estrogen_status + progesterone_status + regional_node_examined + reginol_node_positive, data = data_df, family = binomial())
+```
+
+```{r}
+vif_result = vif(logistic_model)
+data.frame(vif_result)|>
+  subset(select = -c(GVIF..1..2.Df..))|>
+  print()
+```
+
+We could see that all vif are lower than 5, which means low collinearity.
+
+```{r}
+data_df = data_df|>
+  subset(select = -c(x6th_stage, differentiate))
+```
+
+### check nonlinear
+Since this is logistic regression, we need to check whether the predictors and the Logit of response variable have a linear relationship. 
+
+```{r}
+logistic_model = glm(status ~ ., data = data_df, family = binomial())
+data_df$prob = predict(logistic_model, type = "response")
+
+numeric_df = data_df |>
+  dplyr::select_if(is.numeric) 
+predictors = colnames(numeric_df)
+
+# Bind the logit and tidying the data for plot
+numeric_df = numeric_df |>
+  mutate(logit = log(prob/(1-prob))) 
+```
+
+```{r}
+ggplot(numeric_df, aes(logit, age))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = "loess")+
+  labs(x = "logit", y = "age", title = "age vs logits")
+#ggsave("age_linear_check.jpg")
+```
+
+```{r}
+ggplot(numeric_df, aes(logit, tumor_size))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = "loess") +
+  labs(x = "logit", y = "tumor size", title = "tumor size vs logits")
+#ggsave("tumor_size_linear_check.jpg")
+```
+
+```{r}
+ggplot(numeric_df, aes(logit, regional_node_examined))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = "loess")  +
+  labs(x = "logit", y = "number of regional node examined", title = "number of regional node examined vs logits")
+#ggsave("reginal_node_exm_linear_check.jpg")
+```
+
+```{r}
+ggplot(numeric_df, aes(logit, reginol_node_positive))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = "loess") +
+  labs(x = "logit", y = "number of regional node being positive", title = "number of regional node beding positive vs logits")
+#ggsave("reginal_node_pos_linear_check.jpg")
+```
+
+The regional_node_examined seems not linear with logits of the outcome, this is reasonable since this data is determined by examiner. This makes us think maybe this should be excluded from our model or we should change regional_node_examined and reginol_node_positive to one variable that show a ratio of reginol_node_positive/regional_node_examined
+
+```{r}
+ggplot(numeric_df, aes(logit, reginol_node_positive/regional_node_examined))+
+  geom_point(size = 0.5, alpha = 0.5) +
+  geom_smooth(method = "loess") +
+  labs(x = "logit", y = "number of regional node being positive/regional node being examined", title = "positive ratio vs logits")
+#ggsave("positive_ratio_linear_check.jpg")
+```
+
+We could see this ratio is linear with logit of the outcome. So this transformation benefit our analysis in both deal with non-linearity and also utilize the predictor reginol_node_positive.
+
+We then use boxTidwell to test the linearlity, three continuous variables shows linear relationship with logit or outcome. All P-values larger than 0.05, which suggest linear relationship. 
+```{r}
+data_df = data_df|>
+  mutate(positive_ratio = reginol_node_positive/regional_node_examined)|>
+  subset(select = -c(reginol_node_positive, regional_node_examined))
+```
+
+```{r}
+boxTidwell(prob ~ age + tumor_size + positive_ratio, ~ race + marital_status + t_stage + n_stage + grade + a_stage + estrogen_status + progesterone_status, data = data_df)
+```
+
+### check outlier
+```{r}
+hat_matrix = hatvalues(logistic_model)
+
+threshold = 12*3/4024
+
+data_hat_df = data_df|>
+  mutate(hat_values = hat_matrix)|>
+  mutate(potential_outlier = ifelse(hat_values >= threshold, 1, 0))
+```
+
+```{r}
+cook_d = cooks.distance(logistic_model)
+
+data_hat_cook_df = data_hat_df|>
+  mutate(cookd = cook_d)|>
+  mutate(influntial = ifelse(cookd >= 0.5, 1, 0))
+```
+
+We see that there are no extreme outliers, so we just keep them in our model. 
+
+## Model Fitting
+
+Now we starts to decide our model. So obviously our baseline model will be logistic regression. To ensure the interpretability of the coefficient, we need to rescale our data. Tumor size, and age need to be rescale.
+```{r}
+data_df$age = rescale(data_df$age)
+data_df$tumor_size = rescale(data_df$tumor_size)
+data_df = data_df|>
+  subset(select = -c(prob))
+```
+
+### baseline model
+Firstly we will separate our dataset to train and test, then we will use 5-fold cv to fit our model
+```{r}
+set.seed(100)
+
+trainIndex = createDataPartition(data_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+train_df = data_df[trainIndex, ]
+test_df = data_df[-trainIndex, ]
+
+train_covariate = train_df|>
+  subset(select = -c(status))
+
+test_covariate = test_df|>
+  subset(select = -c(status))
+
+```
+
+```{r}
+ctrl = trainControl(method = "cv", number = 5)
+baseline_model = train(status ~ ., data = train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+```
+
+```{r}
+baseline_result = predict(baseline_model, newdata = test_df)
+baseline_result = baseline_result|>
+  as.data.frame()|>
+  mutate(actual = test_df$status)
+```
+
+```{r}
+confusionMatrix(data=pull(baseline_result, baseline_result), reference = pull(baseline_result, actual))
+```
+
+```{r}
+summary(baseline_model)
+```
+
+### feature selection with interaction term
+```{r}
+concat_predictors = function(input_vector) {
+  if (length(input_vector) == 1){
+    return(c())
+  }
+  n = length(input_vector)
+  result = character(0)
+  
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      combination = paste(input_vector[i], input_vector[j], sep = ":")
+      result = c(result, combination)
+    }
+  }
+  
+  return(result)
+}
+
+```
+
+```{r}
+all_single_predictors = c("age", "tumor_size", "positive_ratio", "race", "marital_status", "t_stage", "n_stage", "grade", "a_stage", "estrogen_status", "progesterone_status")
+available_single_predictors = c("age", "tumor_size", "positive_ratio", "race", "marital_status", "t_stage", "n_stage", "grade", "a_stage", "estrogen_status", "progesterone_status")
+available_interaction_term = c()
+selected_features = c("positive_ratio")
+best_model = glm(formula = status ~ positive_ratio, data = train_df, family = binomial())
+```
+
+```{r, warning=FALSE}
+while (1) {
+  
+  remaining_features = c(available_single_predictors, available_interaction_term)
+  candidate_models = list()
+  
+  for (feature in remaining_features) {
+    formula = paste("status ~ ", paste(c(selected_features, feature), collapse = " + "), sep = "")
+    candidate_model = glm(formula, data = train_df, family = binomial())
+    candidate_models[[feature]] = candidate_model
+  }
+  
+  best_candidate = candidate_models[[which.min(sapply(candidate_models, AIC))]]
+  
+  if (AIC(best_candidate) < AIC(best_model)) {
+    best_model = best_candidate
+    formula = best_candidate$formula
+    char_selected_features = sub("^status ~\\s*", "", formula)
+    selected_features = unlist(strsplit(char_selected_features, "\\s*\\+\\s*"))
+    predictor_in_model = all_single_predictors[all_single_predictors %in% selected_features]
+    available_single_predictors = all_single_predictors[!all_single_predictors %in% selected_features]
+    available_interaction_term = concat_predictors(predictor_in_model)
+    available_interaction_term = available_interaction_term[!available_interaction_term %in% selected_features]
+  } else {
+    break  
+  }
+}
+```
+
+```{r}
+summary(best_model)
+```
+
+```{r}
+selected_result = predict(best_model, newdata = test_df, type = 'response')
+selected_result = selected_result|>
+  as.data.frame()|>
+  mutate(actual = test_df$status)
+selected_result = selected_result|>
+  mutate(prediction = ifelse(selected_result > 0.5, "Dead", "Alive"))|>
+  mutate(prediction = factor(prediction))
+confusionMatrix(data=pull(selected_result, prediction), reference = pull(selected_result, actual))
+```
+
+### use L1 norm to regularize model
+
+```{r, warning=FALSE}
+lasso_cv_model <- cv.glmnet(x = as.matrix(train_covariate), 
+                    y = train_df$status, 
+                    alpha = 1, 
+                    family = "binomial", 
+                    nfolds = 5)
+```
+
+```{r}
+print(lasso_cv_model)
+
+```
+```{r}
+lasso_model = glmnet(
+  x = as.matrix(train_covariate), 
+  y = train_df$status, 
+  lambda = 0.00129,
+  alpha=1, 
+  family = "binomial"
+  )
+```
+
+```{r}
+lasso_result = predict(lasso_model, s = 0.00143, newx = as.matrix(test_covariate), type = 'response')
+```
+
+```{r}
+result = as.data.frame(lasso_result)|>
+  mutate(prediction = ifelse(s1 > 0.4, "Dead", "Alive"))|>
+  mutate(prediction = factor(prediction))|>
+  mutate(actual = test_df$status)
+
+coef(lasso_model)
+
+confusionMatrix(data=pull(result, prediction), reference = pull(result, actual))
+```
+
+We could see that only age, grade, tumor_size and positive ratio have non-zero coefficient. However, the P-Value [Acc > NIR] still shows it is not good though. We are not sure what caused such result. Our first hypothesis is that the imbalanced data caused such result. 
+
+### use backward to select features
+
+We only delete tumor size and marital status for threshold of 0.05 p value. 
+```{r}
+ctrl = trainControl(method = "cv", number = 5)
+selected_model = train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+```
+
+```{r}
+selected_result = predict(selected_model, newdata = test_df, type = 'prob')
+selected_result = selected_result|>
+  as.data.frame()|>
+  mutate(actual = test_df$status)|>
+  mutate(selected_result = ifelse(Alive > 0.495, "Alive", "Dead"))|>
+  mutate(selected_result = factor(selected_result))
+```
+
+```{r}
+confusionMatrix(data=pull(selected_result, selected_result), reference = pull(selected_result, actual))
+```
+
+```{r}
+summary(selected_model)
+```
+
+### stepwise using AIC
+```{r}
+logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + grade + a_stage + tumor_size + estrogen_status + progesterone_status + positive_ratio, data = train_df, family = binomial())
+step(logistic_model, direction = "both", trace = 0, k = 2)
+```
+It select, positive ratio, estrogen status, progesterone status, t stage, n stage, race, age. This is same as the P-value based model. 
+
+### stepwise using BIC
+```{r}
+logistic_model = glm(status ~ age + race + marital_status + t_stage + n_stage + grade + a_stage + tumor_size + estrogen_status + progesterone_status + positive_ratio, data = train_df, family = binomial())
+step(logistic_model, direction = "both", trace = 0, k = log(nrow(train_df)))
+```
+Result shows age, n stage, tumor size, estrogen status, progesterone status, and positive ratio was included. So the difference in race is not selected and size is included. 
+
+```{r}
+ctrl = trainControl(method = "cv", number = 5)
+selected_model = train(status ~ age + grade + positive_ratio + tumor_size + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+```
+
+```{r}
+selected_result = predict(selected_model, newdata = test_df)
+selected_result = selected_result|>
+  as.data.frame()|>
+  mutate(actual = test_df$status)
+```
+
+```{r}
+confusionMatrix(data=pull(selected_result, selected_result), reference = pull(selected_result, actual))
+```
+
+```{r}
+summary(selected_model)
+```
+
+### random forest
+
+```{r}
+library(randomForest)
+
+rf_model = randomForest(status ~ ., data = train_df, ntree = 5000, class.weights = c(85, 15), importance = TRUE)
+```
+
+```{r}
+rf_predictions = predict(rf_model, newdata = test_df)
+
+confusionMatrix(data=rf_predictions, reference = pull(test_df, status))
+```
+
+We could see that random forest didn't improve the balanced accuracy in original data and resampled data. So it is highly possible that there are no interaction term in our covaraite.
+
+```{r}
+var_importance = varImp(rf_model, conditional=TRUE)
+var_importance = var_importance |>
+  tibble::rownames_to_column("var") 
+var_importance$var = var_importance$var |>
+  as.factor()
+
+ggplot(data = var_importance) + 
+  geom_bar(
+    stat = "identity",
+    mapping = aes(x = reorder(var,abs(Alive)), y=abs(Alive), fill = var), 
+    show.legend = FALSE,
+    width = 1
+  ) + 
+  labs(x = NULL, y = NULL)
+
+```
+
+## Biological Hypothesis
+
+### missing Her2 info
+
+Our second hypothesis is that maybe there are some information that not included in the dataset. As we know, breast cancer can be classified as LumA, LumB, Her2+, and TNBC. Triple-negative breast cancer has the worst prognosis in all breast cancer. But our dataset only include estrogen and progesterone receptor, it does not contain information of Her+ receptor. 
+
+If they are positive in either estrogen or progesterone, the prognosis will be good since we could use hormone therapy and prognosis is good. While when they are both negative, if the cancer is Her2 positive, we could use trastuzumab treatment. Only when all three are negative, we could only use chemo therapy. So if include Her2 information we could distinguish more TNBC patient and this might increase the accuracy of death.  
+
+Also, income information might also affect prognosis since this decide whether they could use latest therapy like hormone therapy, trastuzumab therapy, or they could only afford chemo therapy. 
+
+## Imbalance Race
+
+```{r}
+white_test<-test_df%>%
+  filter(race == "White")
+
+
+pre_wh <- predict(selected_model,newdata = white_test)
+
+confusionMatrix(data=pre_wh, reference = pull(white_test, status))
+
+
+nwhite_test<-test_df%>%
+  filter(race != "White")
+
+nwhite <-test_df%>%filter(race != "White")
+
+
+pre_nwh <- predict(selected_model,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite, status))
+
+
+
+
+```
+
+
+
+
+```{r}
+#Stratify before splitting the training set
+
+white_df<-data_df%>%
+  filter(race == "White")
+
+
+
+set.seed(3407)
+
+trainIndex = createDataPartition(white_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+white_train_df = white_df[trainIndex, ]
+white_test_df = white_df[-trainIndex, ]
+
+selected_model_white = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = white_train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+
+
+pre_wh <- predict(selected_model_white,newdata = white_test_df)
+
+confusionMatrix(data=pre_wh, reference = pull(white_test_df, status))
+
+#non-white
+
+nwhite_df<-data_df%>%
+  filter(race != "White")
+
+set.seed(3407)
+
+trainIndex = createDataPartition(nwhite_df$status, p = 0.8, 
+                                  list = FALSE,
+                                  times = 1)
+nwhite_train_df = nwhite_df[trainIndex, ]
+nwhite_test_df = nwhite_df[-trainIndex, ]
+
+
+selected_model_nwhite = train(status ~ age + grade + positive_ratio+ t_stage + n_stage + estrogen_status + progesterone_status, data = nwhite_train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+
+
+pre_nwh <- predict(selected_model_nwhite,newdata = nwhite_test_df)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite_test_df, status))
+
+
+
+```
+
+
+```{r}
+##Stratify after splitting the training set
+
+white_test<-test_df%>%
+  filter(race == "White")
+
+nwhite_test <-test_df%>%filter(race != "White")
+
+white_train<-train_df%>%
+  filter(race == "White")
+
+nwhite_train <-train_df%>%filter(race != "White")
+
+
+selected_model_white1 = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = white_train, method = "glm",
+                  trControl = ctrl, family = "binomial")
+
+selected_model_nwhite1 = train(status ~ age + grade + positive_ratio + t_stage + n_stage + estrogen_status + progesterone_status, data = nwhite_train, method = "glm",
+                  trControl = ctrl, family = "binomial")
+
+
+pre_wh1 <- predict(selected_model_white1,newdata = white_test)
+
+confusionMatrix(data=pre_wh1, reference = pull(white_test, status))
+
+
+
+pre_nwh1 <- predict(selected_model_nwhite1,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh1, reference = pull(nwhite_test, status))
+
+```
+
+```{r}
+# Test overall accuracy
+#Stratify after splitting the training set
+df_bind<-white_test %>% rbind(nwhite_test)
+
+
+df_bind_pre<-c(pre_wh1,pre_nwh1)%>%as.data.frame()
+
+binddf<- cbind(pull(df_bind,status),df_bind_pre)
+colnames(binddf)<-c("actual","predict")
+
+confusionMatrix(data=pull(binddf, predict), reference = pull(binddf, actual))
+```
+
+
+
+```{r}
+
+#test threshold
+
+selected_model_white = train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = "glm",
+                  trControl = ctrl, family = "binomial")
+
+
+predicted_probabilities <- predict(selected_model_white,newdata = test_df,type = "prob")
+
+threshold <- 0.58
+
+predicted_class <- ifelse(predicted_probabilities[, "Alive"] > threshold, "Alive", "Dead")%>%
+  as.data.frame()%>%
+  mutate(predict = factor(.))%>%
+  mutate(actual = test_df$status)
+  
+
+confusionMatrix(data=predicted_class$predict, reference = pull(test_df, status))
+```
+
+```{r}
+# separately calculate the proportion
+
+sum(white_df$race == "White"& white_df$status == "Alive")/nrow(white_df)
+
+
+sum(nwhite_df$race != "White"& nwhite_df$status == "Alive")/nrow(nwhite_df)
+```
+
+```{r}
+weight_vector <- ifelse(train_df$race == "White", 7,9)
+
+control <- trainControl(method = "boot", number = 40, sampling = "down")
+
+logistic_model_weight <- train(status ~ age + grade + positive_ratio + race  + t_stage + n_stage + estrogen_status + progesterone_status, data = train_df, method = "glm",
+                  trControl = ctrl, family = "binomial",weights = weight_vector)
+
+pre_nwh <- predict(logistic_model_weight,newdata = test_df)
+
+confusionMatrix(data=pre_nwh, reference = pull(test_df, status))
+
+pre_nwh <- predict(logistic_model_weight,newdata = nwhite_test)
+
+confusionMatrix(data=pre_nwh, reference = pull(nwhite_test, status))
+
+```
+
+
+## Survival Model
+
+```{r}
+survival_df = read_csv("dataset/Project_2_data.csv")|>
+  janitor::clean_names()|>
+  mutate(grade = ifelse(grade == "anaplastic; Grade IV", 4, grade))|>
+  mutate(
+    t_stage = factor(t_stage),
+    race = factor(race),
+    marital_status = factor(marital_status),
+    n_stage = factor(n_stage),
+    x6th_stage = factor(x6th_stage),
+    differentiate = factor(differentiate),
+    a_stage = factor(a_stage), 
+    estrogen_status = factor(estrogen_status),
+    progesterone_status = factor(progesterone_status), 
+    status = factor(status),
+    grade = factor(grade)
+  )
+
+colnames(survival_df)
+```
+
+still, we remove x6th_stage and differentiate since coxph also require no collinear
+```{r}
+survival_df = survival_df|>
+  subset(select = -c(x6th_stage, differentiate))|>
+  mutate(positive_ratio = reginol_node_positive / regional_node_examined)|>
+  subset(select = -c(reginol_node_positive, regional_node_examined))
+```
+
+change all categorical to dummy
+```{r}
+factor_cols = colnames(survival_df)[!(colnames(survival_df) %in% c("age", "tumor_size", "positive_ratio", "survival_months"))]
+dummy_variables =  model.matrix(~.-1, data = survival_df[, factor_cols])
+survival_df = cbind(survival_df, dummy_variables)
+survival_df = survival_df[, -(which(names(survival_df) %in% factor_cols))]
+survival_df = survival_df|>
+  subset(select = -c(raceWhite, marital_statusMarried))
+```
+
+```{r}
+survival_obj = Surv(time = survival_df$survival_months, event = survival_df$statusDead)
+```
+
+```{r}
+cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + marital_statusSeparated + marital_statusSingle + marital_statusWidowed + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4 + a_stageRegional + tumor_size + estrogen_statusPositive + progesterone_statusPositive + positive_ratio , data = survival_df)
+```
+
+```{r}
+cox_zph = cox.zph(cox_model)
+summary(cox_model)
+```
+There are some not significant variables, we uses backward elimination to delete them
+
+```{r}
+new_cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4  + estrogen_statusPositive + progesterone_statusPositive + positive_ratio , data = survival_df)
+new_cox_model
+```
+We found the set of variables left are same as backward elimination for logistic models.
+
+```{r}
+cox_zph = cox.zph(new_cox_model)
+ggcoxzph(cox_zph)
+```
+Two hormone receptor got p value smaller than 0.05, which violates the assumption, we will stratify them in our next model.
+
+```{r}
+strat_cox_model = coxph(survival_obj ~ age + raceBlack + raceOther + t_stageT2 + t_stageT3 + t_stageT4 + n_stageN2 + n_stageN3 + grade2 + grade3 + grade4  + strata(estrogen_statusPositive) + strata(progesterone_statusPositive) + positive_ratio , data = survival_df)
+strat_cox_model
+```
+
+```{r}
+cox_zph = cox.zph(strat_cox_model)
+ggcoxzph(cox_zph)
+```
+Now all variables have p value larger than 0.05, and global p value near to 1, so it follows the assumption
+```{r}
+ggcoxdiagnostics(strat_cox_model, type = "dfbeta",
+                 linear.predictions = FALSE, ggtheme = theme_bw())
+```
+All observations around 0, which suggest no influential observations. 
+
+```{r}
+ggcoxfunctional(Surv(survival_months, statusDead) ~ positive_ratio + age + tumor_size, data = survival_df)
+```
+The age looks quadratic, but from the scatter plot it still seems linear, we decide to include it in our model. 
+
+```{r}
+summary(strat_cox_model)
+```
+
+```{r}
+fit_selected_feature = survfit(strat_cox_model)
+plot_selected_feature = ggsurvplot(
+  fit_selected_feature,
+  data = survival_df,
+  conf.int = TRUE,
+  legend.title = "Selected Feature Model", 
+  title.theme = "margin")
+
+plot_selected_feature
+
+#ggsave("survival_model_curve.jpg")
+```
+We could see that the patient with both receptor have lower risk, and patient with no receptor have highest risk of death. 

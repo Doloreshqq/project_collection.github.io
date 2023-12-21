@@ -1,0 +1,39 @@
+---
+title: "Qin Huang's project collection"
+---
+
+::: {style="text-align: center;"}
+<p><strong><font size = '4.5'>Welcome to Qin Huang's website 😃!</strong></p>
+
+<img src="images/selfie.png" style="width:45%;"/>
+:::
+
+# About me
+
+I'm currently a first-year master student majoring in Biostatistics at Columbia University Mailman School of Public Health.
+
+If you want to learn more about me, you can navigate to my resume or find my contact information on navigation site.
+
+# Project
+
+In this website, I'd like to show some project I participated.
+
+1.  [Data Science project](https://doloreshqq.github.io/p8105_final.github.io/)
+
+This is a course final project. In this project, we conducted EDA, chi-squared tests and regression based on DASS-42 responses to figure out what factors might contribute to different levels of depression.
+
+In this project, we built a **shiny app** to show the visual-interaction plots among different countries.
+
+2.  [Survival project - intern](profLk.html)
+
+This is the project when I interned at Astrazeneca this summer. One of the key insights from my work was the importance of profile likelihood confidence intervals when dealing with skewed sample data distributions, as opposed to Wald confidence intervals.
+
+Recognizing the lack of existing R packages or functions to calculate profile likelihood, I embarked on a research project during my internship. I delved into the intricacies of Cox models and likelihood calculations and successfully designed a function that can compute profile likelihood confidence interval.
+
+3. [Statistics-based XAI approach for neural network decision analysis](xai.html)
+
+In this project, we applied PCA to get features of 2D images. The analysis highlights that the performance of neural network predictions is notably influenced by low- and high-dimensional PCA features, impacting global shape and local noise, respectively. 
+
+4. [Biostatisics Method project](bm.html)
+
+In this project, logistic regression-based models and the Cox PH model were implemented to predict patient fatality risk 9 years after being diagnosed with breast cancer. Model selection was performed using several strategies, and potential interaction terms were taken into consideration. To tackle the performance gap between White and minority races, weighting and stratification strategies were used and improved the prediction accuracy of minority races.

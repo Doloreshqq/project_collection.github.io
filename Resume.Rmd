@@ -1,0 +1,83 @@
+---
+title: "Resume of Qin Huang"
+---
+
+## Contact
+
+-   Name: Qin Huang
+-   Mobile: (734)-263-7828
+-   Email: [qh2284\@cumc.columbia.edu](mailto:qh2284@cumc.columbia.edu){.email}
+-   Address: 60 Haven Avenue, New York, NY 10032
+
+------------------------------------------------------------------------
+
+## EDUCATION
+
+**Columbia University, Mailman School of Public Health** <span style="float: right; font-weight: bold;">New York, NY</span>
+
+MS in Biostatistics <div style="text-align: right; float: right;">expected May, 2025</div>
+
+-   Coursework: Survival analysis, Data science, Probability, Biostatistic method
+
+**University Of Michigan** <span style="float: right; font-weight: bold;">Ann Arbor, MI</span>
+
+BSE in Biomedical Engineering   - *GPA: 4.0/4* <div style="text-align: right; float: right;">Apr, 2023</div>
+
+- Coursework: Introduction to Database, Introduction to R computing, Python Visualization
+- Award: James B. Angell Scholar
+
+**Shanghai Jiao Tong University** <span style="float: right; font-weight: bold;">Shanghai, China</span>
+
+BSE in Electrical and Computer Engineering   - *GPA: 3.53/4* <div style="text-align: right; float: right;">Aug, 2023</div>
+
+- Coursework: Probabilistic Methods in Eng., Intro to Signals and Systems, Intro to Circuits, Matlab programming
+- Award: SJTU Undergraduate Excellent Scholarship
+
+------------
+
+## SKILL
+- Programming: R, SQL, SAS, MATLAB, Python, Verilog, LaTeX, C
+- Software: Solidworks, LabVIEW, COMSOL, OriginLab, Microsoft Office, LabGym
+
+-------------
+
+## WORK EXPERIENCE
+**Astrazeneca (Intern)** <span style="float: right; font-weight: bold;">Shanghai, China</span>
+
+Oncology programmer <div style="text-align: right; float: right;">May, 2023 - Jul, 2023</div>
+
+- Designed and implemented an algorithm on profile likelihood confidence interval calculation based on R programming with less than 1% difference compared to SAS results where working with harzard ratio and cox model
+
+-------------
+
+## PROJECT AND COMPETITION
+**Columbia University** <span style="float: right; font-weight: bold;">New York, NY</span>
+
+<i>Autism Project </i> <span style="float: right;">Nov, 2023 - present</span>
+
+- The project focuses on new-born infants to discover the associations between infants’ behaviors and different features including demographic information, anthropomentrics etc..
+- Conduct data cleaning and achieve a longitudinal dataset with 370 variables. Apply Principle Component Analysis for each time spot(3mo/6mo/9mo) to find the potential correlation among the predictors.
+
+**University Of Michigan** <span style="float: right; font-weight: bold;">Ann Arbor, MI</span>
+
+<i>Statistics-based XAI approach for neural network decision analysis</i> <span style="float: right;">Jul, 2023 - Dec.2023</span>
+
+- Introduce a pedagogical approach applying PCA and MLR to simulate and interpret the inner structure of Neuron Networks working on 2D image.
+
+- **Results:** Successfully establish a neural network interpretation framework for hand-written digit recognition. Methods proven with higher accuracy, robustness, and sensitivity to global and local texture information compared with the existing method.
+
+<i>Experimenting escaping behavior of larvae under repetitive weak stimulation</i> <span style="float: right;">May, 2022 - May, 2023</span>
+
+- Collected virgins, planned on hybridization, prepared ATR food and designed genotypes of both a control group and an experimental group; Conducted escaping behavioral experiments working on hundreds of data. Took care of larvae stocks, and autoclaved the pipettes;
+
+- **Results:** There is no sufficient evidence to draw on the correlation between escaping behavior and repetitive weak stimulation for a specific range of spectrum. However, different light compositions could still play a role in shaping the escaping behavior of larvae.
+
+<i>Mask R-CNN for rat behavior identification</i> <span style="float: right;">May, 2022 - Nov, 2022</span>
+
+- Wrote codes for the entire program and processed each frameimage of the video with Python (using VIA to mark an object within a frame and then generate a JSON file), created train and validation groups, conducted training by using the pre-trained COCO dataset with Mask R-CNN
+
+- **Results:** The shape of the mouse could be masked in the motion video, with an accuracy over 0.7 which potentially leads to new approach of Detectron2.
+
+
+
+

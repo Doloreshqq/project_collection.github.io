@@ -1,0 +1,129 @@
+---
+title: "profile likelihood"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(survival)
+```
+
+```{r}
+# create survival model
+data("pbc", package="survival")
+c1 <- coxph(formula = Surv(time, status == 2) ~  age + edema + log(bili) +
+              log(albumin) + log(protime), data = pbc)
+
+```
+
+```{r}
+profLik <- function(x,
+                    CI=0.95,
+                    interval=1000,
+                    mult=c(0.1, 2),
+                    devNew=TRUE,
+                    ...) {
+  if (!inherits(x, "coxph")) stop ("Only applies to objects of class coxph")
+  coef1 <- stats::coef(x)
+  ## use collapse in case formula spans >1 line
+  f1 <- paste0(deparse(x$formula), collapse="")
+  f1 <- gsub("  ", "", f1)
+  ## plot title
+  main1 <- paste0("Partial likelihood profiles and ",
+                  100*CI,
+                  "% CI cutoff for model:\n",
+                  f1,
+                  " \n Circles show ",
+                  100*CI,
+                  "% CI limits for Wald interval")
+  ###----------------------------------------
+  ###  plots
+  ###----------------------------------------
+  ## get names of the coefficients from model.frame
+  ## note excluding Surv
+  n1 <- names(stats::model.frame(x))[!grepl( "Surv", names(model.frame(x)) )]
+  ## allocate memory for log partical likelihood
+  llik <- double(length=interval)
+  for (i in seq(length(coef1))) {
+    low1 <- mult[1] * coef1[i]
+    up1 <- mult[2] * coef1[i]
+    ## range for coefficient
+    beta1 <- seq(from=low1, to=up1, length.out=interval)
+    for (j in seq(interval)) {
+      rhs1 <- paste0(n1[-i], collapse="+")
+      ## offset = includes coefficient as fixed covariate
+      off1 <- beta1[j]
+      off2 <- paste0("+offset(", off1, "*", n1[i], ")")
+      ## new RHS for formula
+      rhs2 <- paste0(rhs1, off2)
+      f2 <- stats::as.formula(paste0(".~", rhs2))
+      ## refit model and find model loglik with this value (beta) of coefficient
+      c2 <- stats::update(x, formula=f2)
+      llik[j] <- c2$loglik[2]
+    }
+
+    graphics::par(oma=c(0, 0, 4, 0))
+    if (i > 1 & devNew == TRUE) grDevices::dev.new()
+    graphics::plot.default(beta1, llik,
+                           type="l",
+                           xlab="Values for coefficient",
+                           ylab="Model partial likelihood",
+                           main=n1[i],
+                           ...)
+    ## range for confidence interval is chi-square on with 1 df
+    rCI <- stats::qchisq(CI, 1)
+    ## confidence interval (calcuate lower only)
+    ci1 <- x$loglik[2] - rCI / 2
+    graphics::abline(h=ci1, lty=2)
+
+    
+    # find intersection
+    f <- function(beta1, llik, ci1) {
+      f_interp <- approxfun(x = beta1, y = llik) 
+      return(function(x) f_interp(x) - ci1)  
+    }
+    
+    # define function
+    G <- f(beta1, llik, ci1)
+    
+    med = 0.5*(min(beta1)+max(beta1))
+
+    rot1 <- uniroot(G, interval = c(min(beta1), med))
+    rot2 <- uniroot(G, interval = c(med, max(beta1)))
+
+    prof1 = exp(rot1$root)
+    prof2 = exp(rot2$root)
+
+    sd1 <- sqrt(x$var[i, i])
+
+    CI2 <- (1 - CI) / 2
+    rCI <- stats::qnorm(1 - CI2)
+    graphics::points(coef1[i] + c(-rCI, rCI) * sd1,
+                     c(ci1, ci1),
+                     pch=1,
+                     cex=3,
+                     ...)
+    graphics::mtext(main1, line=0.3, outer=TRUE)
+    
+    
+    wald1 = exp(coef1[i] + (-rCI) * sd1)
+    wald2 = exp(coef1[i] + (rCI) * sd1)
+    
+    
+    res = data.frame(
+      Column1 = c(n1[i],'low','up'),
+      Column2 = c('Wald',wald1,wald2),
+      Column3 = c('Profile',prof1,prof2)
+    )
+    
+    print(res)
+  }
+}
+
+
+profLik(c1)
+```
+
+## Interesting finding
+
+R factor starts at 1 (not 0).

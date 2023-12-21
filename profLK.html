@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>profile likelihood</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Resume.html">My Resume</a>
+</li>
+<li>
+  <a href="https://doloreshqq.github.io/p8105_final.github.io/">DS Project</a>
+</li>
+<li>
+  <a href="profLK.html">Survival Project</a>
+</li>
+<li>
+  <a href="xai.html">XAI Project</a>
+</li>
+<li>
+  <a href="bm.html">BM Project</a>
+</li>
+<li>
+  <a href="mailto:&lt;qh2284@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/Doloreshqq/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">profile likelihood</h1>
+
+</div>
+
+
+<pre class="r"><code># create survival model
+data(&quot;pbc&quot;, package=&quot;survival&quot;)
+c1 &lt;- coxph(formula = Surv(time, status == 2) ~  age + edema + log(bili) +
+              log(albumin) + log(protime), data = pbc)</code></pre>
+<pre class="r"><code>profLik &lt;- function(x,
+                    CI=0.95,
+                    interval=1000,
+                    mult=c(0.1, 2),
+                    devNew=TRUE,
+                    ...) {
+  if (!inherits(x, &quot;coxph&quot;)) stop (&quot;Only applies to objects of class coxph&quot;)
+  coef1 &lt;- stats::coef(x)
+  ## use collapse in case formula spans &gt;1 line
+  f1 &lt;- paste0(deparse(x$formula), collapse=&quot;&quot;)
+  f1 &lt;- gsub(&quot;  &quot;, &quot;&quot;, f1)
+  ## plot title
+  main1 &lt;- paste0(&quot;Partial likelihood profiles and &quot;,
+                  100*CI,
+                  &quot;% CI cutoff for model:\n&quot;,
+                  f1,
+                  &quot; \n Circles show &quot;,
+                  100*CI,
+                  &quot;% CI limits for Wald interval&quot;)
+  ###----------------------------------------
+  ###  plots
+  ###----------------------------------------
+  ## get names of the coefficients from model.frame
+  ## note excluding Surv
+  n1 &lt;- names(stats::model.frame(x))[!grepl( &quot;Surv&quot;, names(model.frame(x)) )]
+  ## allocate memory for log partical likelihood
+  llik &lt;- double(length=interval)
+  for (i in seq(length(coef1))) {
+    low1 &lt;- mult[1] * coef1[i]
+    up1 &lt;- mult[2] * coef1[i]
+    ## range for coefficient
+    beta1 &lt;- seq(from=low1, to=up1, length.out=interval)
+    for (j in seq(interval)) {
+      rhs1 &lt;- paste0(n1[-i], collapse=&quot;+&quot;)
+      ## offset = includes coefficient as fixed covariate
+      off1 &lt;- beta1[j]
+      off2 &lt;- paste0(&quot;+offset(&quot;, off1, &quot;*&quot;, n1[i], &quot;)&quot;)
+      ## new RHS for formula
+      rhs2 &lt;- paste0(rhs1, off2)
+      f2 &lt;- stats::as.formula(paste0(&quot;.~&quot;, rhs2))
+      ## refit model and find model loglik with this value (beta) of coefficient
+      c2 &lt;- stats::update(x, formula=f2)
+      llik[j] &lt;- c2$loglik[2]
+    }
+
+    graphics::par(oma=c(0, 0, 4, 0))
+    if (i &gt; 1 &amp; devNew == TRUE) grDevices::dev.new()
+    graphics::plot.default(beta1, llik,
+                           type=&quot;l&quot;,
+                           xlab=&quot;Values for coefficient&quot;,
+                           ylab=&quot;Model partial likelihood&quot;,
+                           main=n1[i],
+                           ...)
+    ## range for confidence interval is chi-square on with 1 df
+    rCI &lt;- stats::qchisq(CI, 1)
+    ## confidence interval (calcuate lower only)
+    ci1 &lt;- x$loglik[2] - rCI / 2
+    graphics::abline(h=ci1, lty=2)
+
+    
+    # find intersection
+    f &lt;- function(beta1, llik, ci1) {
+      f_interp &lt;- approxfun(x = beta1, y = llik) 
+      return(function(x) f_interp(x) - ci1)  
+    }
+    
+    # define function
+    G &lt;- f(beta1, llik, ci1)
+    
+    med = 0.5*(min(beta1)+max(beta1))
+
+    rot1 &lt;- uniroot(G, interval = c(min(beta1), med))
+    rot2 &lt;- uniroot(G, interval = c(med, max(beta1)))
+
+    prof1 = exp(rot1$root)
+    prof2 = exp(rot2$root)
+
+    sd1 &lt;- sqrt(x$var[i, i])
+
+    CI2 &lt;- (1 - CI) / 2
+    rCI &lt;- stats::qnorm(1 - CI2)
+    graphics::points(coef1[i] + c(-rCI, rCI) * sd1,
+                     c(ci1, ci1),
+                     pch=1,
+                     cex=3,
+                     ...)
+    graphics::mtext(main1, line=0.3, outer=TRUE)
+    
+    
+    wald1 = exp(coef1[i] + (-rCI) * sd1)
+    wald2 = exp(coef1[i] + (rCI) * sd1)
+    
+    
+    res = data.frame(
+      Column1 = c(n1[i],&#39;low&#39;,&#39;up&#39;),
+      Column2 = c(&#39;Wald&#39;,wald1,wald2),
+      Column3 = c(&#39;Profile&#39;,prof1,prof2)
+    )
+    
+    print(res)
+  }
+}
+
+
+profLik(c1)</code></pre>
+<pre><code>##   Column1          Column2          Column3
+## 1     age             Wald          Profile
+## 2     low 1.02487673925311 1.02481467785082
+## 3      up 1.05616657570642 1.05609851235293</code></pre>
+<pre><code>##   Column1          Column2          Column3
+## 1   edema             Wald          Profile
+## 2     low 1.43958914533212  1.4228595594002
+## 3      up 4.17145598270638 4.13272512477477</code></pre>
+<pre><code>##     Column1          Column2          Column3
+## 1 log(bili)             Wald          Profile
+## 2       low 2.01574597598185 2.01540539805484
+## 3        up 2.79019631299522 2.79037180854187</code></pre>
+<pre><code>##        Column1            Column2            Column3
+## 1 log(albumin)               Wald            Profile
+## 2          low 0.0226722319935734 0.0233624189478691
+## 3           up  0.293102738478718  0.301733085786937</code></pre>
+<pre><code>##        Column1          Column2          Column3
+## 1 log(protime)             Wald          Profile
+## 2          low 2.41231963376647 2.24869282384341
+## 3           up 49.0622423375812 45.8587506971269</code></pre>
+<div id="interesting-finding" class="section level2">
+<h2>Interesting finding</h2>
+<p>R factor starts at 1 (not 0).</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
