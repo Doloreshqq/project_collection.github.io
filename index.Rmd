@@ -24,7 +24,7 @@ This is a course final project. In this project, we conducted EDA, chi-squared t
 
 In this project, we built a **shiny app** to show the visual-interaction plots among different countries.
 
-2.  [Survival project - intern](profLk.html)
+2.  [Survival project - intern](profLK.html)
 
 This is the project when I interned at Astrazeneca this summer. One of the key insights from my work was the importance of profile likelihood confidence intervals when dealing with skewed sample data distributions, as opposed to Wald confidence intervals.
 
