@@ -38,6 +38,7 @@ BSE in Electrical and Computer Engineering   - *GPA: 3.53/4* <div style="text-al
 ## SKILL
 - Programming: R / R shiny, SQL, SAS (Base & Advance certificate), MATLAB, Python, LaTeX, C
 - Software: Excel, PowerPoint
+
 -------------
 
 ## WORK EXPERIENCE
