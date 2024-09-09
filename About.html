@@ -11,12 +11,12 @@
 
 
 
-<title>profile likelihood</title>
+<title>About me</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -324,22 +324,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="Resume.html">My Resume</a>
-</li>
-<li>
-  <a href="https://doloreshqq.github.io/p8105_final.github.io/">DS Project</a>
-</li>
-<li>
-  <a href="profLK.html">Survival Project</a>
-</li>
-<li>
-  <a href="xai.html">XAI Project</a>
-</li>
-<li>
-  <a href="bm.html">BM Project</a>
-</li>
-<li>
-  <a href="https://doloreshqq.shinyapps.io/nphRshiny/">TrialNexus App</a>
+  <a href="about.html">About</a>
 </li>
 <li>
   <a href="mailto:&lt;qh2284@cumc.columbia.edu&gt;">
@@ -362,143 +347,13 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">profile likelihood</h1>
+<h1 class="title toc-ignore">About me</h1>
 
 </div>
 
 
-<pre class="r"><code># create survival model
-data(&quot;pbc&quot;, package=&quot;survival&quot;)
-c1 &lt;- coxph(formula = Surv(time, status == 2) ~  age + edema + log(bili) +
-              log(albumin) + log(protime), data = pbc)</code></pre>
-<pre class="r"><code>profLik &lt;- function(x,
-                    CI=0.95,
-                    interval=1000,
-                    mult=c(0.1, 2),
-                    devNew=TRUE,
-                    ...) {
-  if (!inherits(x, &quot;coxph&quot;)) stop (&quot;Only applies to objects of class coxph&quot;)
-  coef1 &lt;- stats::coef(x)
-  ## use collapse in case formula spans &gt;1 line
-  f1 &lt;- paste0(deparse(x$formula), collapse=&quot;&quot;)
-  f1 &lt;- gsub(&quot;  &quot;, &quot;&quot;, f1)
-  ## plot title
-  main1 &lt;- paste0(&quot;Partial likelihood profiles and &quot;,
-                  100*CI,
-                  &quot;% CI cutoff for model:\n&quot;,
-                  f1,
-                  &quot; \n Circles show &quot;,
-                  100*CI,
-                  &quot;% CI limits for Wald interval&quot;)
-  ###----------------------------------------
-  ###  plots
-  ###----------------------------------------
-  ## get names of the coefficients from model.frame
-  ## note excluding Surv
-  n1 &lt;- names(stats::model.frame(x))[!grepl( &quot;Surv&quot;, names(model.frame(x)) )]
-  ## allocate memory for log partical likelihood
-  llik &lt;- double(length=interval)
-  for (i in seq(length(coef1))) {
-    low1 &lt;- mult[1] * coef1[i]
-    up1 &lt;- mult[2] * coef1[i]
-    ## range for coefficient
-    beta1 &lt;- seq(from=low1, to=up1, length.out=interval)
-    for (j in seq(interval)) {
-      rhs1 &lt;- paste0(n1[-i], collapse=&quot;+&quot;)
-      ## offset = includes coefficient as fixed covariate
-      off1 &lt;- beta1[j]
-      off2 &lt;- paste0(&quot;+offset(&quot;, off1, &quot;*&quot;, n1[i], &quot;)&quot;)
-      ## new RHS for formula
-      rhs2 &lt;- paste0(rhs1, off2)
-      f2 &lt;- stats::as.formula(paste0(&quot;.~&quot;, rhs2))
-      ## refit model and find model loglik with this value (beta) of coefficient
-      c2 &lt;- stats::update(x, formula=f2)
-      llik[j] &lt;- c2$loglik[2]
-    }
-
-    graphics::par(oma=c(0, 0, 4, 0))
-    if (i &gt; 1 &amp; devNew == TRUE) grDevices::dev.new()
-    graphics::plot.default(beta1, llik,
-                           type=&quot;l&quot;,
-                           xlab=&quot;Values for coefficient&quot;,
-                           ylab=&quot;Model partial likelihood&quot;,
-                           main=n1[i],
-                           ...)
-    ## range for confidence interval is chi-square on with 1 df
-    rCI &lt;- stats::qchisq(CI, 1)
-    ## confidence interval (calcuate lower only)
-    ci1 &lt;- x$loglik[2] - rCI / 2
-    graphics::abline(h=ci1, lty=2)
-
-    
-    # find intersection
-    f &lt;- function(beta1, llik, ci1) {
-      f_interp &lt;- approxfun(x = beta1, y = llik) 
-      return(function(x) f_interp(x) - ci1)  
-    }
-    
-    # define function
-    G &lt;- f(beta1, llik, ci1)
-    
-    med = 0.5*(min(beta1)+max(beta1))
-
-    rot1 &lt;- uniroot(G, interval = c(min(beta1), med))
-    rot2 &lt;- uniroot(G, interval = c(med, max(beta1)))
-
-    prof1 = exp(rot1$root)
-    prof2 = exp(rot2$root)
-
-    sd1 &lt;- sqrt(x$var[i, i])
-
-    CI2 &lt;- (1 - CI) / 2
-    rCI &lt;- stats::qnorm(1 - CI2)
-    graphics::points(coef1[i] + c(-rCI, rCI) * sd1,
-                     c(ci1, ci1),
-                     pch=1,
-                     cex=3,
-                     ...)
-    graphics::mtext(main1, line=0.3, outer=TRUE)
-    
-    
-    wald1 = exp(coef1[i] + (-rCI) * sd1)
-    wald2 = exp(coef1[i] + (rCI) * sd1)
-    
-    
-    res = data.frame(
-      Column1 = c(n1[i],&#39;low&#39;,&#39;up&#39;),
-      Column2 = c(&#39;Wald&#39;,wald1,wald2),
-      Column3 = c(&#39;Profile&#39;,prof1,prof2)
-    )
-    
-    print(res)
-  }
-}
-
-
-profLik(c1)</code></pre>
-<pre><code>##   Column1          Column2          Column3
-## 1     age             Wald          Profile
-## 2     low 1.02487673925311 1.02481467785082
-## 3      up 1.05616657570642 1.05609851235293</code></pre>
-<pre><code>##   Column1          Column2          Column3
-## 1   edema             Wald          Profile
-## 2     low 1.43958914533212  1.4228595594002
-## 3      up 4.17145598270638 4.13272512477477</code></pre>
-<pre><code>##     Column1          Column2          Column3
-## 1 log(bili)             Wald          Profile
-## 2       low 2.01574597598185 2.01540539805484
-## 3        up 2.79019631299522 2.79037180854187</code></pre>
-<pre><code>##        Column1            Column2            Column3
-## 1 log(albumin)               Wald            Profile
-## 2          low 0.0226722319935734 0.0233624189478691
-## 3           up  0.293102738478718  0.301733085786937</code></pre>
-<pre><code>##        Column1          Column2          Column3
-## 1 log(protime)             Wald          Profile
-## 2          low 2.41231963376647 2.24869282384341
-## 3           up 49.0622423375812 45.8587506971269</code></pre>
-<div id="interesting-finding" class="section level2">
-<h2>Interesting finding</h2>
-<p>R factor starts at 1 (not 0).</p>
+<div id="section" class="section level2">
+<h2></h2>
 </div>
 
 

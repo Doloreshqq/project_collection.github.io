@@ -10,7 +10,7 @@ title: "Qin Huang's project collection"
 
 # About me
 
-I'm currently a first-year master student majoring in Biostatistics at Columbia University Mailman School of Public Health.
+I'm currently a second-year master student majoring in Biostatistics at Columbia University Mailman School of Public Health.
 
 If you want to learn more about me, you can navigate to my resume or find my contact information on navigation site.
 
@@ -37,3 +37,16 @@ In this project, we applied PCA to get features of 2D images. The analysis highl
 4. [Biostatisics Method project](bm.html)
 
 In this project, logistic regression-based models and the Cox PH model were implemented to predict patient fatality risk 9 years after being diagnosed with breast cancer. Model selection was performed using several strategies, and potential interaction terms were taken into consideration. To tackle the performance gap between White and minority races, weighting and stratification strategies were used and improved the prediction accuracy of minority races.
+
+5. [TrialNexus App - intern](https://doloreshqq.shinyapps.io/nphRshiny/)
+
+With significant scientific breakthroughs, targeted cancer drugs have entered clinical trials with complex mechanisms of action and unique features. Traditional statistical distributions, such as the simple exponential distribution for time-to-event endpoints, may struggle to adequately model the expected survival curves for these innovative cancer therapies.
+
+In this app, we commit flexibility and efficiency for our statistician.
+
+- Flexible Distribution: Users can select from various distributions for each study arm, such as piecewise exponential, mixture cure rate, or customized survival distributions. The experimental arm also includes a convenient 'Proportional Hazards' option that can be applied alongside any survival distribution in the control arm.
+
+- Flexible Enrollment Curve: Users have the option to utilize common non-uniform pattern functions or create a customized enrollment curve to better suit their study's needs.
+ 
+- Flexible Statistical Testing at Each Analysis: At each analysis point, users can specify the type of statistical test to be applied, including the logrank test, the maximum of multiple weighted logrank tests, or even a customized weighted logrank test.
+
